@@ -5,18 +5,15 @@ A key and signing policy (KASP) defines the DNSSEC [](#RFC4033) [](#RFC4034)
 
 # Format
 
-A key and signing policy should be expressed as XML.
+A key and signing policy can be expressed in any format. This document
+uses XML as example.
 
 ## Preamble
 
-Each XML file starts with a standard element "&lt;?xml...". 
-
-    <xml version="1.0" encoding="UTF-8"?>
-
-All policies are listed in the &lt;KASP&gt;...&lt;/KASP&gt; element which encloses one or
-more policies.
+All policies are enclosed in a KASP container:	
 
     <KASP>
+
 
 ## Policy Description
 
