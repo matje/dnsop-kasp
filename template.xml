@@ -12,6 +12,8 @@
 <!ENTITY RFC.6781 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781'>
 
 <!-- normative: need to know -->
+<!ENTITY RFC.2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119'>
+<!ENTITY RFC.6020 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6020'>
 ]>
 
 <?rfc toc="yes"?>
@@ -87,6 +89,10 @@
         &RFC.4035;
         &RFC.5155;
         &RFC.6781;
+</references>
+<references title="Normative References">
+        &RFC.2119;
+        &RFC.6020;
 </references>
 
     &back;
