@@ -31,20 +31,20 @@
 
 <title abbrev="KASP">DNSSEC Key and Signing Policies</title>
 
-        <author initials='J.' surname='Lundstrom' fullname='Jerry Lundstrom'>
+        <author initials='J.' surname='Lundström' fullname='Jerry Lundström'>
             <organization>.SE</organization>
 
             <address>
                 <postal>
-                    <street>Ringvagen 1</street>
-                    <street></street>
+                    <street>Ringvägen 100</street>
+                    <street>Box 7399</street>
                     <city>Stockholm</city> <region></region>
-                    <code>1234 AA</code>
+                    <code>103 91</code>
                     <country>SE</country>
                 </postal>
 
                 <phone></phone>
-                <email>jerry@opendnssec.org</email>
+                <email>jerry.lundstrom@iis.se</email>
                 <uri>http://www.iis.se/</uri>
             </address>
         </author>
