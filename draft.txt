@@ -126,7 +126,7 @@ Internet-Draft                    KASP                         June 2014
 
    case:  A choice option.
 
-   The following argumenst are used:
+   The following arguments are used:
 
    string:  A string.
 
@@ -320,7 +320,7 @@ Internet-Draft                    KASP                         June 2014
    4.  Algorithm, Iterations, SaltLength MUST be used as the parameters
        to the hash algorithm.
 
-   The choice and case modelling types are not included in the actual
+   The choice and case modeling types are not included in the actual
    data tree.  In the case that NSEC is used, the XML example would be:
 
    <Denial>
