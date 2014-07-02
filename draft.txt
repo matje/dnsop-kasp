@@ -187,10 +187,10 @@ Internet-Draft                    KASP                         June 2014
    RRSIG records and MUST be included.  It MUST contain the following
    leaf nodes: Resign, Refresh, Jitter, InceptionOffset.  It MUST
    contain a Validity container that includes leaf nodes for the
-   validity periods of certain type of RRsets.  The Default leaf node
-   sets the validity period for all RRsets that do not have a specific
-   leaf node in this Validity container.  The Denial leaf node sets the
-   validity period for all NSEC and NSEC3 RRsets.
+   validity periods of certain type of resource record sets (RRsets).
+   The Default leaf node sets the validity period for all RRsets that do
+   not have a specific leaf node in this Validity container.  The Denial
+   leaf node sets the validity period for all NSEC and NSEC3 RRsets.
 
    The Validity container MUST include leaf nodes Default and Denial and
    MAY include other leaf nodes to differentiate between even more types
