@@ -6,16 +6,16 @@ all: txt
 
 txt: $(TITLE).txt
 
-draft.txt: *.mkd
+draft.txt: *.mkd template.xml
 	pandoc2rfc *.mkd
 
 $(TITLE).txt:	draft.txt
 	ln -sf $< $@
 
-draft.xml: *.mkd
+draft.xml: *.mkd template.xml
 	pandoc2rfc -X *.mkd
 
-draft.html: *.mkd
+draft.html: *.mkd template.xml
 	pandoc2rfc -H *.mkd
 
 
