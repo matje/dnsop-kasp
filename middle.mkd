@@ -27,6 +27,8 @@ uses XML as example.
 
 ## Data Modeling
 
+### Data Modeling Types
+
 This document reuses the modeling types described in [](#RFC6020).
 
 The following modeling types are used:
@@ -47,11 +49,14 @@ leaf:
 
 choice:
 
-:   A choice.
+:   A choice contains a set of case nodes that cannot appear together.
 
 case:
 
-:   A choice option.
+:   A case is part of the choice type and represents one possible candidate
+    that may appear in the schema.
+
+### Data Modeling Arguments
 
 The following argumenst are used:
 
