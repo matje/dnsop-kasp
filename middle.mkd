@@ -276,60 +276,89 @@ same meaning as for the KSK:
 #### Zone
 
 The Zone container encloses general information concerning the zone.
+It SHOULD include a PropagationDelay leaf and a SOA container. The SOA
+container MUST include a TTL leaf, Minimum leaf and Serial leaf.
 
-    <Zone>
-        <PropagationDelay>PT9999S</PropagationDelay>
-        <SOA>
-            <TTL>PT3600S</TTL>
-            <Minimum>PT3600S</Minimum>
-            <Serial>unixtime</Serial>
-        </SOA>
-    </Zone>
+    container Zone {
+        leaf PropagationDelay { type duration; }
+        container SOA {
+            leaf TTL { type duration; }
+            leaf Minimum { type duration; }
+            leaf Serial { type string; }
+        }
+    }
 
+The PropagationDelay leaf holds the amount of time needed for information
+changes at the master server for the zone to work its way through to all the
+secondary servers. The value MAY be used in equations related to key timings
+during a rollover. If PropagationDelay is not used, a signer MUST use 
+different heuristics to make sure key timings during a rollover are correct, 
+for example by querying the name servers for the required records to exist.
 
-&lt;PropagationDelay&gt; is the amount of time needed for information changes
-at the master server for the zone to work its way through to all the secondary
-nameservers.
+The SOA container gives values of parameters for the SOA record in the
+signed zone. These values will override values set for the SOA record in the
+unsigned zone file:
 
-The &lt;SOA&gt; element gives values of parameters for the SOA record in the
-signed zone. 
+1. TTL - The TTL of the SOA record MUST be set to the value of the TTL leaf.
+1. Minimum - The MINIMUM rdata field of the SOA record MUST be set to the
+   value of the Minimum leaf.
+1. Serial - The format of the serial number in the signed zone. 
+   This is one of: "counter", datecounter, unixtime, keep.
 
-The SOA values will override values set for the SOA record in the input zone
-file and the serial in signed and unsigned zone is likely to go out of sync.
+When Serial is set to "counter", the SOA serial MUST be incremented by one
+every re-sign.
 
-These SOA values are:
+When Serial is set to "datecounter", the SOA serial MUST be
+set to YYYYMMDDCC, where YYYYMMDD represents the current date and CC
+the number of new re-signs that day. If there are more than 100 re-signs 
+a day, the date MUST rollover to the day after and count is reset to 00.
 
-1. &lt;TTL&gt; - TTL of the SOA record.
-2. &lt;Minimum&gt; - value for the SOA MINIMUM parameter.
-3. &lt;Serial&gt; - the format of the serial number in the signed zone. 
-   This is one of: counter, datecounter, unixtime, keep.
+When Serial is "unixtime", the SOA serial MUST be set to the seconds since
+the epoch (1970-01-01 UTC). 
+
+When Serial is "keep" the SOA serial MUST be set to the SERIAL rdata field
+of the SOA record in the unsigned zone. If this does not increment the last
+used serial, a signer MUST NOT produce a signed zone.
 
 #### Parent
 
 If a DNSSEC zone is in a chain of trust, digest information about the KSKs
-used in the zone will be stored in DS records in the parent zone. To properly
-roll keys, timing information about the parent zone must be configured in
-the &lt;Parent&gt; section:
+used in the zone will be published in DS records in the parent zone.
+To properly roll keys, timing information about the parent zone must be
+configured in the Parent container. A Parent container SHOULD include 
+a PropagationDelay leaf, a DS container and a SOA container.
+The DS container MUST include a TTL leaf and the SOA container MUST include
+TTL and Minimum leafs.
 
-    <Parent>
-        <PropagationDelay>PT9999S</PropagationDelay>
-        <DS>
-            <TTL>PT3600S</TTL>
-        </DS>
-        <SOA>
-            <TTL>PT3600S</TTL>
-            <Minimum>PT3600S</Minimum>
-        </SOA>
-    </Parent>
+    container Parent {
+        leaf PropagationDelay { type duration; }
+        container DS {
+            leaf TTL { type duration; }
+        }
+        container SOA {
+            leaf TTL { type duration; }
+            leaf Minimum { type duration; }
+        }
+    }
 
-&lt;PropagationDelay&gt; is the interval between the time a new KSK is published in
-the zone and the time that the DS record appears in the parent zone.
+Here, the PropagationDelay leaf configures how long it takes to get a DS 
+record published in the parent zone after submitting the DNSKEY or DS record
+to the parent zone manager. The value MAY be used in equations related to key
+timings during a rollover. If PropagationDelay is not used, a signer MUST use 
+different heuristics to make sure key timings during a rollover are correct, 
+for example by querying the name servers for the required records to exist.
 
-The &lt;DS&gt; tag holds information about the DS record in the parent. It contains
-a single element, &lt;TTL&gt;, which should be set to the TTL of the DS record in
-the parent zone.
+The DS and SOA containers give values of parameters for the DS record and SOA
+record in the parent zone. These values MAY be used in equations related to
+key timings during a rollover. If these values are not used, a signer
+MUST query the parent name servers in order to retrieve the correct values.
 
-&lt;SOA&gt; gives information about parameters of the parent's SOA record, used by
-KASP in its calculations. As before, &lt;TTL&gt; is the TTL of the SOA record and
-&lt;Minimum&gt; is the value of the SOA MINIMUM parameter.
+A before:
+
+1. TTL - The TTL of the DS and SOA records MUST be set to the value of the
+   corresponding TTL leaf.
+1. Minimum - The MINIMUM rdata field of the SOA record MUST be set to the
+   value of the Minimum leaf.
+
+
 
