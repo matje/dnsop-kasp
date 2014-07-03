@@ -66,11 +66,15 @@ string:
 
 duration:
 
-:   A duration.
+:   A duration, as specified in ISO 8601 [REF].
 
 empty:
 
 :   An empty type.
+
+integer:
+
+:   An integer.
 
 
 # KASP Contents
