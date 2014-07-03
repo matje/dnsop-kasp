@@ -63,19 +63,21 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Key Words . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.2.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.3.  Data Modeling . . . . . . . . . . . . . . . . . . . . . .   2
+     1.3.  Data Modeling . . . . . . . . . . . . . . . . . . . . . .   3
+       1.3.1.  Data Modeling Types . . . . . . . . . . . . . . . . .   3
+       1.3.2.  Data Modeling Arguments . . . . . . . . . . . . . . .   3
    2.  KASP Contents . . . . . . . . . . . . . . . . . . . . . . . .   3
      2.1.  Preamble  . . . . . . . . . . . . . . . . . . . . . . . .   3
-       2.1.1.  Policies  . . . . . . . . . . . . . . . . . . . . . .   3
+       2.1.1.  Policies  . . . . . . . . . . . . . . . . . . . . . .   4
          2.1.1.1.  Signatures  . . . . . . . . . . . . . . . . . . .   4
          2.1.1.2.  Authenticated Denial of Existence . . . . . . . .   5
          2.1.1.3.  Keys  . . . . . . . . . . . . . . . . . . . . . .   7
-         2.1.1.4.  Zone  . . . . . . . . . . . . . . . . . . . . . .   8
-         2.1.1.5.  Parent  . . . . . . . . . . . . . . . . . . . . .   9
-   3.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     3.1.  Informative References  . . . . . . . . . . . . . . . . .   9
-     3.2.  Normative References  . . . . . . . . . . . . . . . . . .  10
-   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  11
+         2.1.1.4.  Zone  . . . . . . . . . . . . . . . . . . . . . .   9
+         2.1.1.5.  Parent  . . . . . . . . . . . . . . . . . . . . .  10
+   3.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     3.1.  Informative References  . . . . . . . . . . . . . . . . .  11
+     3.2.  Normative References  . . . . . . . . . . . . . . . . . .  11
+   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -101,11 +103,9 @@ Table of Contents
    A key and signing policy can be expressed in any format.  This
    document uses XML as example.
 
-1.3.  Data Modeling
 
-   This document reuses the modeling types described in [RFC6020].
 
-   The following modeling types are used:
+
 
 
 
@@ -114,25 +114,39 @@ Lundstrom & Mekking     Expires December 29, 2014               [Page 2]
 Internet-Draft                    KASP                         June 2014
 
 
-   container:  A container.
+1.3.  Data Modeling
 
-   list:  A list.
+1.3.1.  Data Modeling Types
 
-   leaf:  A leaf node.
+   This document reuses the modeling types described in [RFC6020].
 
-   leaf-list:  A list.
+   The following modeling types are used:
 
-   choice:  A choice.
+   container:  A container is used to group related nodes in a subtree.
+      A container has only child nodes and no values.
 
-   case:  A choice option.
+   list:  A list defines a sequence of list entries.
+
+   leaf:  A leaf contains simple data like an integer or a string.  It
+      has exactly one value and no child nodes.
+
+   choice:  A choice contains a set of case nodes that cannot appear
+      together.
+
+   case:  A case is part of the choice type and represents one possible
+      candidate that may appear in the schema.
+
+1.3.2.  Data Modeling Arguments
 
    The following argumenst are used:
 
    string:  A string.
 
-   duration:  A duration.
+   duration:  A duration, as specified in ISO 8601 [REF].
 
    empty:  An empty type.
+
+   integer:  An integer.
 
 2.  KASP Contents
 
@@ -147,6 +161,15 @@ Internet-Draft                    KASP                         June 2014
    A KASP container MUST contain a sequence of policy entries and MUST
    NOT contain any other modeling types.
 
+
+
+
+
+Lundstrom & Mekking     Expires December 29, 2014               [Page 3]
+
+Internet-Draft                    KASP                         June 2014
+
+
 2.1.1.  Policies
 
    Each policy MUST have a "name" leaf which contains the name of the
@@ -157,18 +180,6 @@ Internet-Draft                    KASP                         June 2014
    with it.  Furthermore, a policy MUST have the containers Signatures,
    Denial, Keys, Zone and Parent.  These containers are described in the
    forthcoming sections.
-
-
-
-
-
-
-
-
-Lundstrom & Mekking     Expires December 29, 2014               [Page 3]
-
-Internet-Draft                    KASP                         June 2014
-
 
    list Policy {
        key "name";
@@ -207,6 +218,14 @@ Internet-Draft                    KASP                         June 2014
        }
    }
 
+
+
+
+Lundstrom & Mekking     Expires December 29, 2014               [Page 4]
+
+Internet-Draft                    KASP                         June 2014
+
+
    Here:
 
    1.  Resign - the re-sign interval, which is the interval when the
@@ -218,14 +237,6 @@ Internet-Draft                    KASP                         June 2014
        re-generate the signatures each time the signer runs.  The
        signature MUST be refreshed when the time until the signature
        expiration is closer than the refresh interval or when the data
-
-
-
-Lundstrom & Mekking     Expires December 29, 2014               [Page 4]
-
-Internet-Draft                    KASP                         June 2014
-
-
        has been changed.  A value of zero (PT0S) MUST be interpreted as
        to refresh the signatures each re-sign interval.
 
@@ -249,6 +260,8 @@ Internet-Draft                    KASP                         June 2014
        period for all NSEC and NSEC3 RRsets, Default is the validity
        period for all other RRset.
 
+   [MM: Add MaxZoneTTL]
+
    The relationship between these elements is shown [RFC6781],
    Figure 11.
 
@@ -260,19 +273,6 @@ Internet-Draft                    KASP                         June 2014
    and MUST include a container Hash.  Additionally, it MAY include TTL
    and OptOut leaf nodes.
 
-   The Hash container MUST include three leaf nodes: Algorithm,
-   Iterations and SaltLength [MM: kasp.xml uses Salt, but it is actually
-   only needed in signconf.xml].
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -282,6 +282,10 @@ Lundstrom & Mekking     Expires December 29, 2014               [Page 5]
 Internet-Draft                    KASP                         June 2014
 
 
+   The Hash container MUST include three leaf nodes: Algorithm,
+   Iterations and SaltLength [MM: kasp.xml uses Salt, but it is actually
+   only needed in signconf.xml].
+
    container Denial {
        choice RRtype {
            case plain {
@@ -289,8 +293,8 @@ Internet-Draft                    KASP                         June 2014
            }
            case hashed {
                container NSEC3 {
-                   leaf TTL { type duration; }
-                   leaf OptOut { type empty; }
+                   leaf TTL { type duration; }?
+                   leaf OptOut { type empty; }?
                    leaf Resalt { type duration; }
                    container Hash {
                        leaf Algorithm { type integer; }
@@ -329,10 +333,6 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-
-
-
-
 Lundstrom & Mekking     Expires December 29, 2014               [Page 6]
 
 Internet-Draft                    KASP                         June 2014
@@ -341,51 +341,51 @@ Internet-Draft                    KASP                         June 2014
 2.1.1.3.  Keys
 
    Parameters relating to keys can be found in Keys container.  This
-   container MUST include ...
+   container MUST include leaf nodes for TTL, PublishSafety and
+   RetireSafety, and MAY include a ShareKeys leaf and a Purge.
+   Furthermore, it MUST either include a KSK and ZSK container, or a CSK
+   container.  The latter indicates that a Single-Type Signing Scheme is
+   used.
 
-   <TTL>PT3600S</TTL>
-   <RetireSafety>PT3600S</RetireSafety>
-   <PublishSafety>PT3600S</PublishSafety>
-   <ShareKeys/>
-   <Purge>P14D</Purge>
+   container Keys {
+       leaf TTL { type duration; }
+       leaf PublishSafety { type duration; }
+       leaf RetireSafety { type duration; }
+       leaf ShareKeys { type empty; }?
+       leaf Purge { type duration; }?
+       choice signing-scheme {
+           case split {
+               container KSK { ... }
+               container ZSK { ... }
+           }
+           case single {
+               container CSK { ... }
+           }
+       }
+   }
 
-   <TTL> is the time-to-live value for the DNSKEY resource records.
-   <PublishSafety> and <RetireSafety> are the publish and retire safety
-   margins for the keys.  These intervals are safety margins added to
-   calculated timing values to give some extra time to cover unforeseen
-   events, e.g. in case external events prevent zone publication.
+   The leaf nodes specify the following behavior:
 
-   If multiple zones are associated with a policy, the presence of
-   <ShareKeys/> indicates that a key can be shared between zones.
+   1.  TTL - This value MUST be used as the TTL of the DNSKEY resource
+       records.
 
-   If <Purge> is present, keys marked as dead will be automatically
-   purged from the database after this interval.
+   2.  PublishSafety - The publish safety margin is used to give some
+       extra time to cover unforeseen events and MUST be added to the
+       publish interval in key timing equations.
 
-   Key-Signing Keys
+   3.  RetireSafety - Similar, the retire safety margin MUST be added to
+       the reitre interval in key timing equations.
 
-   Parameters for key-signing keys are held in the <KSK> section:
+   4.  ShareKeys - if multiple zones are associated with the same
+       policy, the presence of a ShareKeys node indicates that a
+       physical key can be shared between zones.
 
-   <KSK>
-       <Algorithm length="2048">8</Algorithm>
-       <Lifetime>P1Y</Lifetime>
-       <Repository>softHSM</Repository>
-       <Standby>1</Standby>
-       <ManualRollover/>
-   </KSK>
+   5.  Purge - if present, keys in the dead state (as defined in key-
+       timing-bis) will be automatically purged from the database after
+       this interval.
 
-   where:
-
-   1.  <Algorithm> - determines the algorithm used for the key
-
-   2.  <Lifetime> - determines how long the key is used for before it is
-       rolled.
-
-   3.  <Repository> - determines the location of the keys.  Keys are
-       stored in "repositories"
-
-   4.  <Standby> - if present, determines the number of standby keys
-       held in the zone.
-
+   A CSK, KSK or ZSK container MUST include leaf nodes for Algorithm,
+   Length, Lifetime and Repository.  Additionally, they MAY include a
 
 
 
@@ -394,53 +394,53 @@ Lundstrom & Mekking     Expires December 29, 2014               [Page 7]
 Internet-Draft                    KASP                         June 2014
 
 
-   5.  <ManualRollover/> - if present, this indicates that the key
-       rollover will only be initiated on the command by the operator.
+   RollType leaf, Standby leaf and ManualRollover leaf.  A CSK or KSK
+   container MAY also include a RFC5011 leaf.
 
-   Zone-Signing Keys
+   container CSK {
+       leaf Algorithm { type integer; }
+       leaf Length { type integer; }
+       leaf Lifetime { type duration; }
+       leaf Repository { type string; }
+       leaf RollType { type string; }?
+       leaf Standby { type empty; }?
+       leaf ManualRollover { type empty; }?
+       leaf RFC5011 { type empty; }?
+   }
 
-   Parameters for zone-signing keys are held in the <ZSK> section, and
-   have the same meaning as for the KSK:
+   container KSK {
+       leaf Algorithm { type integer; }
+       leaf Length { type integer; }
+       leaf Lifetime { type duration; }
+       leaf Repository { type string; }
+       leaf RollType { type string; }?
+       leaf Standby { type empty; }?
+       leaf ManualRollover { type empty; }?
+       leaf RFC5011 { type empty; }?
+   }
 
-   <ZSK>
-       <Algorithm length="1024">8</Algorithm>
-       <Lifetime>P90D</Lifetime>
-       <Repository>softHSM</Repository>
-       <Standby>1</Standby>
-   </ZSK>
+   container ZSK {
+       leaf Algorithm { type integer; }
+       leaf Length { type integer; }
+       leaf Lifetime { type duration; }
+       leaf Repository { type string; }
+       leaf RollType { type string; }?
+       leaf Standby { type integer; }?
+       leaf ManualRollover { type empty; }?
+   }
 
-   [MM: Does enforcer 2.0 change this (CSK, Different rollover
-   scenarios, ...)]
+   where:
 
-2.1.1.4.  Zone
+   1.  Algorithm - this algorithm MUST be used.
 
-   The Zone container encloses general information concerning the zone.
+   2.  Length - this key length MUST be used.
 
-   <Zone>
-       <PropagationDelay>PT9999S</PropagationDelay>
-       <SOA>
-           <TTL>PT3600S</TTL>
-           <Minimum>PT3600S</Minimum>
-           <Serial>unixtime</Serial>
-       </SOA>
-   </Zone>
+   3.  Lifetime - determines how long the key SHOULD be used for before
+       it is rolled.
 
-   <PropagationDelay> is the amount of time needed for information
-   changes at the master server for the zone to work its way through to
-   all the secondary nameservers.
+   4.  Repository - determines the location of the physical keys.  The
+       corresponding type of keys MUST be stored in this repository.
 
-   The <SOA> element gives values of parameters for the SOA record in
-   the signed zone.
-
-   The SOA values will override values set for the SOA record in the
-   input zone file and the serial in signed and unsigned zone is likely
-   to go out of sync.
-
-   These SOA values are:
-
-   1.  <TTL> - TTL of the SOA record.
-
-   2.  <Minimum> - value for the SOA MINIMUM parameter.
 
 
 
@@ -450,38 +450,129 @@ Lundstrom & Mekking     Expires December 29, 2014               [Page 8]
 Internet-Draft                    KASP                         June 2014
 
 
-   3.  <Serial> - the format of the serial number in the signed zone.
-       This is one of: counter, datecounter, unixtime, keep.
+   5.  Standby - if present, determines the number of standby keys MUST
+       be held in the zone.
+
+   6.  ManualRollover - if present, this indicates that the key rollover
+       MUST NOT occur automatically, it may only be initiated by the
+       operator.
+
+   7.  RFC5011 - if present, this indicates that the key rollover MUST
+       include additional time for key publication and retirement and
+       MUST revoke the predecessor key accordingly.
+
+2.1.1.4.  Zone
+
+   The Zone container encloses general information concerning the zone.
+   It SHOULD include a PropagationDelay leaf and a SOA container.  The
+   SOA container MUST include a TTL leaf, Minimum leaf and Serial leaf.
+
+   container Zone {
+       leaf PropagationDelay { type duration; }
+       container SOA {
+           leaf TTL { type duration; }
+           leaf Minimum { type duration; }
+           leaf Serial { type string; }
+       }
+   }
+
+   The PropagationDelay leaf holds the amount of time needed for
+   information changes at the master server for the zone to work its way
+   through to all the secondary servers.  The value MAY be used in
+   equations related to key timings during a rollover.  If
+   PropagationDelay is not used, a signer MUST use different heuristics
+   to make sure key timings during a rollover are correct, for example
+   by querying the name servers for the required records to exist.
+
+   The SOA container gives values of parameters for the SOA record in
+   the signed zone.  These values will override values set for the SOA
+   record in the unsigned zone file:
+
+   1.  TTL - The TTL of the SOA record MUST be set to the value of the
+       TTL leaf.
+
+   2.  Minimum - The MINIMUM rdata field of the SOA record MUST be set
+       to the value of the Minimum leaf.
+
+   3.  Serial - The format of the serial number in the signed zone.
+       This is one of: "counter", datecounter, unixtime, keep.
+
+
+
+
+
+Lundstrom & Mekking     Expires December 29, 2014               [Page 9]
+
+Internet-Draft                    KASP                         June 2014
+
+
+   When Serial is set to "counter", the SOA serial MUST be incremented
+   by one every re-sign.
+
+   When Serial is set to "datecounter", the SOA serial MUST be set to
+   YYYYMMDDCC, where YYYYMMDD represents the current date and CC the
+   number of new re-signs that day.  If there are more than 100 re-signs
+   a day, the date MUST rollover to the day after and count is reset to
+   00.
+
+   When Serial is "unixtime", the SOA serial MUST be set to the seconds
+   since the epoch (1970-01-01 UTC).
+
+   When Serial is "keep" the SOA serial MUST be set to the SERIAL rdata
+   field of the SOA record in the unsigned zone.  If this does not
+   increment the last used serial, a signer MUST NOT produce a signed
+   zone.
 
 2.1.1.5.  Parent
 
    If a DNSSEC zone is in a chain of trust, digest information about the
-   KSKs used in the zone will be stored in DS records in the parent
+   KSKs used in the zone will be published in DS records in the parent
    zone.  To properly roll keys, timing information about the parent
-   zone must be configured in the <Parent> section:
+   zone must be configured in the Parent container.  A Parent container
+   SHOULD include a PropagationDelay leaf, a DS container and a SOA
+   container.  The DS container MUST include a TTL leaf and the SOA
+   container MUST include TTL and Minimum leafs.
 
-   <Parent>
-       <PropagationDelay>PT9999S</PropagationDelay>
-       <DS>
-           <TTL>PT3600S</TTL>
-       </DS>
-       <SOA>
-           <TTL>PT3600S</TTL>
-           <Minimum>PT3600S</Minimum>
-       </SOA>
-   </Parent>
+   container Parent {
+       leaf PropagationDelay { type duration; }
+       container DS {
+           leaf TTL { type duration; }
+       }
+       container SOA {
+           leaf TTL { type duration; }
+           leaf Minimum { type duration; }
+       }
+   }
 
-   <PropagationDelay> is the interval between the time a new KSK is
-   published in the zone and the time that the DS record appears in the
-   parent zone.
+   Here, the PropagationDelay leaf configures how long it takes to get a
+   DS record published in the parent zone after submitting the DNSKEY or
+   DS record to the parent zone manager.  The value MAY be used in
+   equations related to key timings during a rollover.  If
+   PropagationDelay is not used, a signer MUST use different heuristics
+   to make sure key timings during a rollover are correct, for example
+   by querying the name servers for the required records to exist.
 
-   The <DS> tag holds information about the DS record in the parent.  It
-   contains a single element, <TTL>, which should be set to the TTL of
-   the DS record in the parent zone.
+   The DS and SOA containers give values of parameters for the DS record
+   and SOA record in the parent zone.  These values MAY be used in
 
-   <SOA> gives information about parameters of the parent's SOA record,
-   used by KASP in its calculations.  As before, <TTL> is the TTL of the
-   SOA record and <Minimum> is the value of the SOA MINIMUM parameter.
+
+
+Lundstrom & Mekking     Expires December 29, 2014              [Page 10]
+
+Internet-Draft                    KASP                         June 2014
+
+
+   equations related to key timings during a rollover.  If these values
+   are not used, a signer MUST query the parent name servers in order to
+   retrieve the correct values.
+
+   A before:
+
+   1.  TTL - The TTL of the DS and SOA records MUST be set to the value
+       of the corresponding TTL leaf.
+
+   2.  Minimum - The MINIMUM rdata field of the SOA record MUST be set
+       to the value of the Minimum leaf.
 
 3.  References
 
@@ -498,13 +589,6 @@ Internet-Draft                    KASP                         June 2014
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, March 2005.
-
-
-
-Lundstrom & Mekking     Expires December 29, 2014               [Page 9]
-
-Internet-Draft                    KASP                         June 2014
-
 
    [RFC5155]  Laurie, B., Sisson, G., Arends, R., and D. Blacka, "DNS
               Security (DNSSEC) Hashed Authenticated Denial of
@@ -529,35 +613,7 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Lundstrom & Mekking     Expires December 29, 2014              [Page 10]
+Lundstrom & Mekking     Expires December 29, 2014              [Page 11]
 
 Internet-Draft                    KASP                         June 2014
 
@@ -613,4 +669,4 @@ Authors' Addresses
 
 
 
-Lundstrom & Mekking     Expires December 29, 2014              [Page 11]
+Lundstrom & Mekking     Expires December 29, 2014              [Page 12]
