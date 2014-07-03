@@ -33,19 +33,17 @@ The following modeling types are used:
 
 container:
 
-:   A container.
+:   A container is used to group related nodes in a subtree. A container
+    has only child nodes and no values. 
 
 list:
 
-:   A list.
+:   A list defines a sequence of list entries.
 
 leaf:
 
-:   A leaf node.
-
-leaf-list:
-
-:   A list.
+:   A leaf contains simple data like an integer or a string. It has exactly
+    one value and no child nodes.
 
 choice:
 
