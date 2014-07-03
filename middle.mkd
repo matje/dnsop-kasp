@@ -162,6 +162,8 @@ Here:
    the signatures are valid for - Denial is the validity period for all NSEC
    and NSEC3 RRsets, Default is the validity period for all other RRset.
 
+[MM: Add MaxZoneTTL]
+
 The relationship between these elements is shown [](#RFC6781), Figure 11.
 
 #### Authenticated Denial of Existence
@@ -182,8 +184,8 @@ signconf.xml].
             }
             case hashed {
                 container NSEC3 {
-                    leaf TTL { type duration; }
-                    leaf OptOut { type empty; }
+                    leaf TTL { type duration; }?
+                    leaf OptOut { type empty; }?
                     leaf Resalt { type duration; }
                     container Hash {
                         leaf Algorithm { type integer; }
@@ -216,62 +218,94 @@ In the case that NSEC is used, the XML example would be:
 #### Keys
 
 Parameters relating to keys can be found in Keys container. This container
-MUST include ...
+MUST include leaf nodes for TTL, PublishSafety and RetireSafety, and MAY
+include a ShareKeys leaf and a Purge. Furthermore, it MUST either include
+a KSK and ZSK container, or a CSK container. The latter indicates that a
+Single-Type Signing Scheme is used.
 
-    <TTL>PT3600S</TTL>
-    <RetireSafety>PT3600S</RetireSafety>
-    <PublishSafety>PT3600S</PublishSafety>
-    <ShareKeys/>
-    <Purge>P14D</Purge>
+    container Keys {
+        leaf TTL { type duration; }
+        leaf PublishSafety { type duration; }
+        leaf RetireSafety { type duration; }
+        leaf ShareKeys { type empty; }?
+        leaf Purge { type duration; }?
+        choice signing-scheme {
+            case split {
+                container KSK { ... }
+                container ZSK { ... }
+            }
+            case single {
+                container CSK { ... }
+            }
+        }
+    }
 
-&lt;TTL&gt; is the time-to-live value for the DNSKEY resource records.
-&lt;PublishSafety&gt; and &lt;RetireSafety&gt; are the publish and retire safety margins
-for the keys. These intervals are safety margins added to calculated timing
-values to give some extra time to cover unforeseen events, e.g. in case
-external events prevent zone publication.
+The leaf nodes specify the following behavior:
 
-If multiple zones are associated with a policy, the presence of &lt;ShareKeys/&gt;
-indicates that a key can be shared between zones.
+1. TTL - This value MUST be used as the TTL of the DNSKEY resource records.
+1. PublishSafety - The publish safety margin is used to give some extra
+   time to cover unforeseen events and MUST be added to the 
+   publish interval in key timing equations.
+1. RetireSafety - Similar, the retire safety margin MUST be added to the 
+   reitre interval in key timing equations.
+1. ShareKeys - if multiple zones are associated with the same policy, the
+   presence of a ShareKeys node indicates that a physical key can be shared
+   between zones.
+1. Purge - if present, keys in the dead state (as defined in key-timing-bis)
+   will be automatically purged from the database after this interval.
 
-If &lt;Purge&gt; is present, keys marked as dead will be automatically purged from
-the database after this interval.
+A CSK, KSK or ZSK container MUST include leaf nodes for Algorithm,
+Length, Lifetime and Repository. Additionally, they MAY include
+a RollType leaf, Standby leaf and ManualRollover leaf. A CSK or KSK container
+MAY also include a RFC5011 leaf.
 
-Key-Signing Keys
+    container CSK {
+        leaf Algorithm { type integer; }
+        leaf Length { type integer; }
+        leaf Lifetime { type duration; }
+        leaf Repository { type string; }
+        leaf RollType { type string; }?
+        leaf Standby { type empty; }?
+        leaf ManualRollover { type empty; }?
+        leaf RFC5011 { type empty; }?
+    }
 
-Parameters for key-signing keys are held in the &lt;KSK&gt; section:
+    container KSK {
+        leaf Algorithm { type integer; }
+        leaf Length { type integer; }
+        leaf Lifetime { type duration; }
+        leaf Repository { type string; }
+        leaf RollType { type string; }?
+        leaf Standby { type empty; }?
+        leaf ManualRollover { type empty; }?
+        leaf RFC5011 { type empty; }?
+    }
 
-    <KSK>
-        <Algorithm length="2048">8</Algorithm>
-        <Lifetime>P1Y</Lifetime>
-        <Repository>softHSM</Repository>
-        <Standby>1</Standby>
-        <ManualRollover/>
-    </KSK>
+    container ZSK {
+        leaf Algorithm { type integer; }
+        leaf Length { type integer; }
+        leaf Lifetime { type duration; }
+        leaf Repository { type string; }
+        leaf RollType { type string; }?
+        leaf Standby { type integer; }?
+        leaf ManualRollover { type empty; }?
+    }
 
 where:
 
-1. &lt;Algorithm&gt; - determines the algorithm used for the key
-1. &lt;Lifetime&gt; - determines how long the key is used for before it is rolled.
-1. &lt;Repository&gt; - determines the location of the keys. Keys are stored in
-   "repositories"
-1. &lt;Standby&gt; - if present, determines the number of standby keys held in the
-   zone.
-1. &lt;ManualRollover/&gt; - if present, this indicates that the key rollover will
-   only be initiated on the command by the operator.
-
-Zone-Signing Keys
-
-Parameters for zone-signing keys are held in the &lt;ZSK&gt; section, and have the
-same meaning as for the KSK:
-
-    <ZSK>
-        <Algorithm length="1024">8</Algorithm>
-        <Lifetime>P90D</Lifetime>
-        <Repository>softHSM</Repository>
-        <Standby>1</Standby>
-    </ZSK>
-
-[MM: Does enforcer 2.0 change this (CSK, Different rollover scenarios, ...)]
+1. Algorithm - this algorithm MUST be used.
+1. Length - this key length MUST be used.
+1. Lifetime - determines how long the key SHOULD be used for before it is
+   rolled.
+1. Repository - determines the location of the physical keys.
+   The corresponding type of keys MUST be stored in this repository.
+1. Standby - if present, determines the number of standby keys MUST be held in
+   the zone.
+1. ManualRollover - if present, this indicates that the key rollover MUST NOT
+   occur automatically, it may only be initiated by the operator.
+1. RFC5011 - if present, this indicates that the key rollover MUST include
+   additional time for key publication and retirement and MUST revoke the 
+   predecessor key accordingly. 
 
 #### Zone
 
