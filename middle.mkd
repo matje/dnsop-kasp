@@ -264,9 +264,10 @@ In the case that NSEC is used, the XML example would be:
 
 Parameters relating to keys can be found in Keys container. This container
 MUST include leaf nodes for TTL, PublishSafety and RetireSafety, and MAY
-include a ShareKeys leaf and a Purge. Furthermore, it MUST either include
-a KSK and ZSK container, or a CSK container. The latter indicates that a
-Single-Type Signing Scheme is used.
+include a ShareKeys leaf and a Purge. Furthermore, it MAY include
+a KSK list, a ZSK list and/or a CSK list. The latter indicates that a
+Single-Type Signing Scheme is used. If no such lists are included in the
+policy, the zone remains unsigned.
 
     container Keys {
         leaf TTL {
@@ -287,15 +288,9 @@ Single-Type Signing Scheme is used.
         leaf Purge {
             type duration;
         }
-        choice signing-scheme {
-            case split {
-                container KSK { ... }
-                container ZSK { ... }
-            }
-            case single {
-                container CSK { ... }
-            }
-        }
+        list KSK { ... }
+        list ZSK { ... }
+        list CSK { ... }
     }
 
 The leaf nodes specify the following behavior:
