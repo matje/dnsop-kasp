@@ -77,7 +77,7 @@ Table of Contents
    3.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
      3.1.  Informative References  . . . . . . . . . . . . . . . . .  14
      3.2.  Normative References  . . . . . . . . . . . . . . . . . .  14
-   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -208,16 +208,16 @@ Internet-Draft                    KASP                         July 2014
 
    A Signatures container defines the policy parameters for creating
    RRSIG records and MUST be included.  It MUST contain the following
-   leaf nodes: Resign, Refresh, Jitter, InceptionOffset.  It MUST
-   contain a Validity container that includes leaf nodes for the
-   validity periods of certain type of resource record sets (RRsets).
-   The Default leaf node sets the validity period for all RRsets that do
-   not have a specific leaf node in this Validity container.  The Denial
-   leaf node sets the validity period for all NSEC and NSEC3 RRsets.
+   leaf nodes: Resign, Refresh, InceptionOffset.  It MAY have a leaf
+   node Jitter.  It MUST contain a Validity container that includes leaf
+   nodes for the validity periods of certain type of resource record
+   sets (RRsets).  The Default leaf node sets the validity period for
+   all RRsets that do not have a specific leaf node in this Validity
+   container.  The Denial leaf node sets the validity period for all
+   NSEC and NSEC3 RRsets.
 
-   The Validity container MUST include leaf nodes Default and Denial and
-   MAY include other leaf nodes to differentiate between even more types
-   of RRsets.
+
+
 
 
 
@@ -225,6 +225,10 @@ Lundstroem & Mekking     Expires January 5, 2015                [Page 4]
 
 Internet-Draft                    KASP                         July 2014
 
+
+   The Validity container MUST include leaf nodes Default and Denial and
+   MAY include other leaf nodes to differentiate between even more types
+   of RRsets.
 
    container Signatures {
        leaf Resign {
@@ -268,12 +272,8 @@ Internet-Draft                    KASP                         July 2014
        has been changed.  A value of zero (PT0S) MUST be interpreted as
        to refresh the signatures each re-sign interval.
 
-   3.  Jitter - the value added to the expiration time of signatures to
-       ensure that not all signatures expire at the same time.  The
-       actual value of Jitter to be added MUST be -j + (r % 2j), where j
-       is the jitter value from the policy and r a random duration,
-       uniformly ranging between -j and j, is added to signature
-       validity period to get the signature expiration time.
+   3.  Jitter - If present, the value added to the expiration time of
+       signatures to ensure that not all signatures expire at the same
 
 
 
@@ -281,6 +281,11 @@ Lundstroem & Mekking     Expires January 5, 2015                [Page 5]
 
 Internet-Draft                    KASP                         July 2014
 
+
+       time.  The actual value of Jitter to be added MUST be -j + (r %
+       2j), where j is the jitter value from the policy and r a random
+       duration, uniformly ranging between -j and j, is added to
+       signature validity period to get the signature expiration time.
 
    4.  InceptionOffset - a duration that MUST be subtracted from the
        time at which a record is signed to give the start time of the
@@ -304,17 +309,12 @@ Internet-Draft                    KASP                         July 2014
 
    Authenticated denial of existence information is included within a
    Denial container.  It MUST contain either an empty leaf node NSEC or
-   a container NSEC3.  A NSEC3 container MUST include a leaf node Resalt
-   and MUST include a container Hash.  Additionally, it MAY include TTL
-   and OptOut leaf nodes.
+   a container NSEC3.  A NSEC3 container MUST include a leaf node for
+   TTL and Resalt and MUST include a container Hash.  Additionally, it
+   MAY include TTL and OptOut leaf nodes.
 
    The Hash container MUST include three leaf nodes: Algorithm,
    Iterations and SaltLength.
-
-
-
-
-
 
 
 
@@ -414,11 +414,11 @@ Internet-Draft                    KASP                         July 2014
 2.1.1.3.  Keys
 
    Parameters relating to keys can be found in Keys container.  This
-   container MUST include leaf nodes for TTL, PublishSafety and
-   RetireSafety, and MAY include a ShareKeys leaf and a Purge.
-   Furthermore, it MAY include a KSK list, a ZSK list and/or a CSK list.
-   The latter indicates that a Single-Type Signing Scheme is used.  If
-   no such lists are included in the policy, the zone remains unsigned.
+   container MUST include leaf node for TTL, and MAY include leaf nodes
+   for PublishSafety, RetireSafety, ShareKeys and Purge.  Furthermore,
+   it MAY include a KSK list, a ZSK list and/or a CSK list.  The latter
+   indicates that a Single-Type Signing Scheme is used.  If no such
+   lists are included in the policy, the zone remains unsigned.
 
    container Keys {
        leaf TTL {
@@ -455,12 +455,13 @@ Internet-Draft                    KASP                         July 2014
    1.  TTL - This value MUST be used as the TTL of the DNSKEY resource
        records.
 
-   2.  PublishSafety - The publish safety margin is used to give some
-       extra time to cover unforeseen events and MUST be added to the
-       publish interval in key timing equations.
+   2.  PublishSafety - If present, the publish safety margin is used to
+       give some extra time to cover unforeseen events and MUST be added
+       to the publish interval in key timing equations.
 
-   3.  RetireSafety - Similar, the retire safety margin MUST be added to
-       the reitre interval in key timing equations.
+   3.  RetireSafety - If present and similar to PublishSafety, the
+       retire safety margin MUST be added to the retire interval in key
+       timing equations.
 
    4.  ShareKeys - if multiple zones are associated with the same
        policy, the presence of a ShareKeys node indicates that a
@@ -497,7 +498,6 @@ Internet-Draft                    KASP                         July 2014
        }
        leaf Standby {
            type empty;
-       }
 
 
 
@@ -506,6 +506,7 @@ Lundstroem & Mekking     Expires January 5, 2015                [Page 9]
 Internet-Draft                    KASP                         July 2014
 
 
+       }
        leaf ManualRollover {
            type empty;
        }
@@ -514,7 +515,7 @@ Internet-Draft                    KASP                         July 2014
        }
    }
 
-   container KSK {
+   list KSK {
        leaf Algorithm {
            mandatory true;
            type integer;
@@ -545,7 +546,7 @@ Internet-Draft                    KASP                         July 2014
        }
    }
 
-   container ZSK {
+   list ZSK {
        leaf Algorithm {
            mandatory true;
            type integer;
@@ -553,7 +554,6 @@ Internet-Draft                    KASP                         July 2014
        leaf Length {
            mandatory true;
            type integer;
-       }
 
 
 
@@ -562,6 +562,7 @@ Lundstroem & Mekking     Expires January 5, 2015               [Page 10]
 Internet-Draft                    KASP                         July 2014
 
 
+       }
        leaf Lifetime {
            mandatory true;
            type duration;
@@ -607,8 +608,7 @@ Internet-Draft                    KASP                         July 2014
 2.1.1.4.  Zone
 
    The Zone container encloses general information concerning the zone.
-   It SHOULD include a PropagationDelay leaf and a SOA container.  The
-   SOA container MUST include a TTL leaf, Minimum leaf and Serial leaf.
+   It MAY include a PropagationDelay leaf and MUST have a SOA container.
 
 
 
@@ -617,6 +617,9 @@ Lundstroem & Mekking     Expires January 5, 2015               [Page 11]
 
 Internet-Draft                    KASP                         July 2014
 
+
+   The SOA container MUST include a TTL leaf, Minimum leaf and Serial
+   leaf.
 
    container Zone {
        leaf PropagationDelay {
@@ -662,9 +665,6 @@ Internet-Draft                    KASP                         July 2014
    When Serial is set to "counter", the SOA serial MUST be incremented
    by one every re-sign.
 
-   When Serial is set to "datecounter", the SOA serial MUST be set to
-   YYYYMMDDCC, where YYYYMMDD represents the current date and CC the
-   number of new re-signs that day.  If there are more than 100 re-signs
 
 
 
@@ -674,6 +674,9 @@ Lundstroem & Mekking     Expires January 5, 2015               [Page 12]
 Internet-Draft                    KASP                         July 2014
 
 
+   When Serial is set to "datecounter", the SOA serial MUST be set to
+   YYYYMMDDCC, where YYYYMMDD represents the current date and CC the
+   number of new re-signs that day.  If there are more than 100 re-signs
    a day, the date MUST rollover to the day after and count is reset to
    00.
 
@@ -691,9 +694,9 @@ Internet-Draft                    KASP                         July 2014
    KSKs used in the zone will be published in DS records in the parent
    zone.  To properly roll keys, timing information about the parent
    zone must be configured in the Parent container.  A Parent container
-   SHOULD include a PropagationDelay leaf, a DS container and a SOA
-   container.  The DS container MUST include a TTL leaf and the SOA
-   container MUST include TTL and Minimum leafs.
+   MAY include a PropagationDelay leaf, a DS container and a SOA
+   container.  The DS container MAY include a TTL leaf and the SOA
+   container MAY include TTL and Minimum leafs.
 
    container Parent {
        leaf PropagationDelay {
@@ -716,12 +719,9 @@ Internet-Draft                    KASP                         July 2014
 
    Here, the PropagationDelay leaf configures how long it takes to get a
    DS record published in the parent zone after submitting the DNSKEY or
-   DS record to the parent zone manager.  The value MAY be used in
+   DS record to the parent zone manager.  The value SHOULD be used in
    equations related to key timings during a rollover.  If
    PropagationDelay is not used, a signer MUST use different heuristics
-   to make sure key timings during a rollover are correct, for example
-   by querying the name servers for the required records to exist.
-
 
 
 
@@ -730,8 +730,11 @@ Lundstroem & Mekking     Expires January 5, 2015               [Page 13]
 Internet-Draft                    KASP                         July 2014
 
 
+   to make sure key timings during a rollover are correct, for example
+   by querying the name servers for the required records to exist.
+
    The DS and SOA containers give values of parameters for the DS record
-   and SOA record in the parent zone.  These values MAY be used in
+   and SOA record in the parent zone.  These values SHOULD be used in
    equations related to key timings during a rollover.  If these values
    are not used, a signer MUST query the parent name servers in order to
    retrieve the correct values.
@@ -773,6 +776,16 @@ Internet-Draft                    KASP                         July 2014
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
+
+
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015               [Page 14]
+
+Internet-Draft                    KASP                         July 2014
+
+
    [RFC6020]  Bjorklund, M., "YANG - A Data Modeling Language for the
               Network Configuration Protocol (NETCONF)", RFC 6020,
               October 2010.
@@ -781,7 +794,50 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015               [Page 15]
 
 Internet-Draft                    KASP                         July 2014
 
@@ -837,4 +893,4 @@ Authors' Addresses
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 15]
+Lundstroem & Mekking     Expires January 5, 2015               [Page 16]

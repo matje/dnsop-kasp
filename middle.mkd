@@ -124,7 +124,8 @@ in the forthcoming sections.
 
 A Signatures container defines the policy parameters for creating RRSIG
 records and MUST be included. It MUST contain the following leaf nodes: Resign,
-Refresh, Jitter, InceptionOffset. It MUST contain a Validity container that
+Refresh, InceptionOffset. It MAY have a leaf node Jitter. It MUST contain a
+Validity container that
 includes leaf nodes for the validity periods of certain type of resource record
 sets (RRsets). The Default leaf node sets the validity period for all RRsets
 that do not have a specific leaf node in this Validity container. The Denial
@@ -172,7 +173,8 @@ Here:
    the time until the signature expiration is closer than the refresh interval
    or when the data has been changed. A value of zero (PT0S) MUST be
    interpreted as to refresh the signatures each re-sign interval.
-1. Jitter - the value added to the expiration time of signatures to ensure
+1. Jitter - If present, the value added to the expiration time of signatures
+   to ensure
    that not all signatures expire at the same time. The actual value of Jitter
    to be added MUST be -j + (r % 2j), where j is the jitter value from the
    policy and r a random duration, uniformly ranging between -j and j, is
@@ -195,8 +197,9 @@ The relationship between these elements is shown [](#RFC6781), Figure 11.
 
 Authenticated denial of existence information is included within a Denial
 container. It MUST contain either an empty leaf node NSEC or a container
-NSEC3. A NSEC3 container MUST include a leaf node Resalt and MUST include
-a container Hash. Additionally, it MAY include TTL and OptOut leaf nodes.
+NSEC3. A NSEC3 container MUST include a leaf node for TTL and Resalt and MUST
+include a container Hash. Additionally, it MAY include TTL and OptOut leaf
+nodes.
 
 The Hash container MUST include three leaf nodes: Algorithm, Iterations and
 SaltLength.
@@ -262,8 +265,8 @@ In the case that NSEC is used, the XML example would be:
 #### Keys
 
 Parameters relating to keys can be found in Keys container. This container
-MUST include leaf nodes for TTL, PublishSafety and RetireSafety, and MAY
-include a ShareKeys leaf and a Purge. Furthermore, it MAY include
+MUST include leaf node for TTL, and MAY include leaf nodes for
+PublishSafety, RetireSafety, ShareKeys and Purge. Furthermore, it MAY include
 a KSK list, a ZSK list and/or a CSK list. The latter indicates that a
 Single-Type Signing Scheme is used. If no such lists are included in the
 policy, the zone remains unsigned.
@@ -293,11 +296,11 @@ policy, the zone remains unsigned.
 The leaf nodes specify the following behavior:
 
 1. TTL - This value MUST be used as the TTL of the DNSKEY resource records.
-1. PublishSafety - The publish safety margin is used to give some extra
-   time to cover unforeseen events and MUST be added to the 
+1. PublishSafety - If present, the publish safety margin is used to give some
+   extra time to cover unforeseen events and MUST be added to the 
    publish interval in key timing equations.
-1. RetireSafety - Similar, the retire safety margin MUST be added to the 
-   reitre interval in key timing equations.
+1. RetireSafety - If present and similar to PublishSafety, the retire safety
+   margin MUST be added to the retire interval in key timing equations.
 1. ShareKeys - if multiple zones are associated with the same policy, the
    presence of a ShareKeys node indicates that a physical key can be shared
    between zones.
@@ -340,7 +343,7 @@ MAY also include a RFC5011 leaf.
         }
     }
 
-    container KSK {
+    list KSK {
         leaf Algorithm {
             mandatory true;
             type integer;
@@ -371,7 +374,7 @@ MAY also include a RFC5011 leaf.
         }
     }
 
-    container ZSK {
+    list ZSK {
         leaf Algorithm {
             mandatory true;
             type integer;
@@ -418,7 +421,7 @@ where:
 #### Zone
 
 The Zone container encloses general information concerning the zone.
-It SHOULD include a PropagationDelay leaf and a SOA container. The SOA
+It MAY include a PropagationDelay leaf and MUST have a SOA container. The SOA
 container MUST include a TTL leaf, Minimum leaf and Serial leaf.
 
     container Zone {
@@ -478,9 +481,9 @@ used serial, a signer MUST NOT produce a signed zone.
 If a DNSSEC zone is in a chain of trust, digest information about the KSKs
 used in the zone will be published in DS records in the parent zone.
 To properly roll keys, timing information about the parent zone must be
-configured in the Parent container. A Parent container SHOULD include 
+configured in the Parent container. A Parent container MAY include 
 a PropagationDelay leaf, a DS container and a SOA container.
-The DS container MUST include a TTL leaf and the SOA container MUST include
+The DS container MAY include a TTL leaf and the SOA container MAY include
 TTL and Minimum leafs.
 
     container Parent {
@@ -503,14 +506,15 @@ TTL and Minimum leafs.
     }
 
 Here, the PropagationDelay leaf configures how long it takes to get a DS 
-record published in the parent zone after submitting the DNSKEY or DS record
-to the parent zone manager. The value MAY be used in equations related to key
-timings during a rollover. If PropagationDelay is not used, a signer MUST use 
-different heuristics to make sure key timings during a rollover are correct, 
-for example by querying the name servers for the required records to exist.
+record published in the parent zone after submitting the DNSKEY or DS 
+record to the parent zone manager. The value SHOULD be used in equations 
+related to key timings during a rollover. If PropagationDelay is not 
+used, a signer MUST use different heuristics to make sure key timings 
+during a rollover are correct, for example by querying the name servers 
+for the required records to exist.
 
 The DS and SOA containers give values of parameters for the DS record and SOA
-record in the parent zone. These values MAY be used in equations related to
+record in the parent zone. These values SHOULD be used in equations related to
 key timings during a rollover. If these values are not used, a signer
 MUST query the parent name servers in order to retrieve the correct values.
 
