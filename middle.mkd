@@ -35,26 +35,29 @@ The following modeling types are used:
 
 container:
 
-:   A container is used to group related nodes in a subtree. A container
-    has only child nodes and no values. 
-
-list:
-
-:   A list defines a sequence of list entries.
+:   A container node does not have a value, but it has a list of child nodes
+    in the data tree. The child nodes are defined in the container's
+    substatements.
 
 leaf:
 
-:   A leaf contains simple data like an integer or a string. It has exactly
-    one value and no child nodes.
+:   A leaf node has a value, but no child nodes in the data tree. A leaf node
+    exists in zero or one instances in the data tree.
+
+list:
+
+:   The "list" statement is used to define an interior data node in the schema
+    tree. A list node may exist in multiple instances in the data tree. Each
+    such instance is known as a list entry.
 
 choice:
 
-:   A choice contains a set of case nodes that cannot appear together.
+:   The "choice" statement defines a set of alternatives, only one of which may
+    exist at any one time. A choice node does not exist in the data tree.
 
-case:
-
-:   A case is part of the choice type and represents one possible candidate
-    that may appear in the schema.
+    A choice consists of a number of branches, defined with the "case"
+    substatement. Each branch contains a number of child nodes. The nodes from
+    at most one of the choice's branches exist at the same time.
 
 ### Data Modeling Arguments
 
@@ -84,7 +87,7 @@ integer:
 All policies MUST be enclosed in a KASP container. 
 
     container KASP {
-        ...
+        list Policy { ... }
     }
 
 A KASP container MUST contain a sequence of policy entries and MUST NOT contain
@@ -102,8 +105,13 @@ in the forthcoming sections.
 
     list Policy {
         key "name";
-        leaf name { type string; }
-        leaf description { type string; }
+        leaf name {
+            mandatory true;
+            type string;
+        }
+        leaf description {
+            type string;
+        }
         container Signatures { ... }
         container Denial { ... }
         container Keys { ... }
@@ -126,13 +134,31 @@ The Validity container MUST include leaf nodes Default and Denial and MAY
 include other leaf nodes to differentiate between even more types of RRsets.
 
     container Signatures {
-        leaf Resign { type duration; }
-        leaf Refresh { type duration; }
-        leaf Jitter { type duration; }
-        leaf InceptionOffset { type duration; }
+        leaf Resign {
+            mandatory true;
+            type duration;
+        }
+        leaf Refresh {
+            mandatory true;
+            type duration;
+        }
+        leaf Jitter {
+            mandatory true;
+            type duration;
+        }
+        leaf InceptionOffset {
+            mandatory true;
+            type duration;
+        }
         container Validity {
-            leaf Default { type duration; }
-            leaf Denial { type duration; }
+            leaf Default {
+                mandatory true;
+                type duration;
+            }
+            leaf Denial {
+                mandatory true;
+                type duration;
+            }
         }
     }
 
@@ -180,17 +206,36 @@ signconf.xml].
     container Denial {
         choice RRtype {
             case plain {
-                leaf NSEC { type empty; }
+                leaf NSEC {
+                    mandatory true;
+                    type empty;
+                }
             }
             case hashed {
                 container NSEC3 {
-                    leaf TTL { type duration; }?
-                    leaf OptOut { type empty; }?
-                    leaf Resalt { type duration; }
+                    leaf TTL {
+                        type duration;
+                    }
+                    leaf OptOut {
+                        type empty;
+                    }
+                    leaf Resalt {
+                        mandatory true;
+                        type duration;
+                    }
                     container Hash {
-                        leaf Algorithm { type integer; }
-                        leaf Iterations { type integer; }
-                        leaf SaltLength { type integer; }
+                        leaf Algorithm {
+                            mandatory true;
+                            type integer;
+                        }
+                        leaf Iterations {
+                            mandatory true;
+                            type integer;
+                        }
+                        leaf SaltLength {
+                            mandatory true;
+                            type integer;
+                        }
                     }
                 }
             }
@@ -224,11 +269,24 @@ a KSK and ZSK container, or a CSK container. The latter indicates that a
 Single-Type Signing Scheme is used.
 
     container Keys {
-        leaf TTL { type duration; }
-        leaf PublishSafety { type duration; }
-        leaf RetireSafety { type duration; }
-        leaf ShareKeys { type empty; }?
-        leaf Purge { type duration; }?
+        leaf TTL {
+            mandatory true;
+            type duration;
+        }
+        leaf PublishSafety {
+            mandatory true;
+            type duration;
+        }
+        leaf RetireSafety {
+            mandatory true;
+            type duration;
+        }
+        leaf ShareKeys {
+            type empty;
+        }
+        leaf Purge {
+            type duration;
+        }
         choice signing-scheme {
             case split {
                 container KSK { ... }
@@ -260,35 +318,93 @@ a RollType leaf, Standby leaf and ManualRollover leaf. A CSK or KSK container
 MAY also include a RFC5011 leaf.
 
     container CSK {
-        leaf Algorithm { type integer; }
-        leaf Length { type integer; }
-        leaf Lifetime { type duration; }
-        leaf Repository { type string; }
-        leaf RollType { type string; }?
-        leaf Standby { type empty; }?
-        leaf ManualRollover { type empty; }?
-        leaf RFC5011 { type empty; }?
+        leaf Algorithm {
+            mandatory true;
+            type integer;
+        }
+        leaf Length {
+            mandatory true;
+            type integer;
+        }
+        leaf Lifetime {
+            mandatory true;
+            type duration;
+        }
+        leaf Repository {
+            mandatory true;
+            type string;
+        }
+        leaf RollType {
+            type string;
+        }
+        leaf Standby {
+            type empty;
+        }
+        leaf ManualRollover {
+            type empty;
+        }
+        leaf RFC5011 {
+            type empty;
+        }
     }
 
     container KSK {
-        leaf Algorithm { type integer; }
-        leaf Length { type integer; }
-        leaf Lifetime { type duration; }
-        leaf Repository { type string; }
-        leaf RollType { type string; }?
-        leaf Standby { type empty; }?
-        leaf ManualRollover { type empty; }?
-        leaf RFC5011 { type empty; }?
+        leaf Algorithm {
+            mandatory true;
+            type integer;
+        }
+        leaf Length {
+            mandatory true;
+            type integer;
+        }
+        leaf Lifetime {
+            mandatory true;
+            type duration;
+        }
+        leaf Repository {
+            mandatory true;
+            type string;
+        }
+        leaf RollType {
+            type string;
+        }
+        leaf Standby {
+            type empty;
+        }
+        leaf ManualRollover {
+            type empty;
+        }
+        leaf RFC5011 {
+            type empty;
+        }
     }
 
     container ZSK {
-        leaf Algorithm { type integer; }
-        leaf Length { type integer; }
-        leaf Lifetime { type duration; }
-        leaf Repository { type string; }
-        leaf RollType { type string; }?
-        leaf Standby { type integer; }?
-        leaf ManualRollover { type empty; }?
+        leaf Algorithm {
+            mandatory true;
+            type integer;
+        }
+        leaf Length {
+            mandatory true;
+            type integer;
+        }
+        leaf Lifetime {
+            mandatory true;
+            type duration;
+        }
+        leaf Repository {
+            mandatory true;
+            type string;
+        }
+        leaf RollType {
+            type string;
+        }
+        leaf Standby {
+            type empty;
+        }
+        leaf ManualRollover {
+            type empty;
+        }
     }
 
 where:
@@ -314,11 +430,23 @@ It SHOULD include a PropagationDelay leaf and a SOA container. The SOA
 container MUST include a TTL leaf, Minimum leaf and Serial leaf.
 
     container Zone {
-        leaf PropagationDelay { type duration; }
+        leaf PropagationDelay {
+            mandatory true;
+            type duration;
+        }
         container SOA {
-            leaf TTL { type duration; }
-            leaf Minimum { type duration; }
-            leaf Serial { type string; }
+            leaf TTL {
+                mandatory true;
+                type duration;
+            }
+            leaf Minimum {
+                mandatory true;
+                type duration;
+            }
+            leaf Serial {
+                mandatory true;
+                type string;
+            }
         }
     }
 
@@ -365,13 +493,25 @@ The DS container MUST include a TTL leaf and the SOA container MUST include
 TTL and Minimum leafs.
 
     container Parent {
-        leaf PropagationDelay { type duration; }
+        leaf PropagationDelay {
+            mandatory true;
+            type duration;
+        }
         container DS {
-            leaf TTL { type duration; }
+            leaf TTL {
+                mandatory true;
+                type duration;
+            }
         }
         container SOA {
-            leaf TTL { type duration; }
-            leaf Minimum { type duration; }
+            leaf TTL {
+                mandatory true;
+                type duration;
+            }
+            leaf Minimum {
+                mandatory true;
+                type duration;
+            }
         }
     }
 

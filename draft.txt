@@ -70,14 +70,14 @@ Table of Contents
      2.1.  Preamble  . . . . . . . . . . . . . . . . . . . . . . . .   3
        2.1.1.  Policies  . . . . . . . . . . . . . . . . . . . . . .   4
          2.1.1.1.  Signatures  . . . . . . . . . . . . . . . . . . .   4
-         2.1.1.2.  Authenticated Denial of Existence . . . . . . . .   5
-         2.1.1.3.  Keys  . . . . . . . . . . . . . . . . . . . . . .   7
-         2.1.1.4.  Zone  . . . . . . . . . . . . . . . . . . . . . .   9
-         2.1.1.5.  Parent  . . . . . . . . . . . . . . . . . . . . .  10
-   3.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
-     3.1.  Informative References  . . . . . . . . . . . . . . . . .  11
-     3.2.  Normative References  . . . . . . . . . . . . . . . . . .  11
-   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  12
+         2.1.1.2.  Authenticated Denial of Existence . . . . . . . .   6
+         2.1.1.3.  Keys  . . . . . . . . . . . . . . . . . . . . . .   8
+         2.1.1.4.  Zone  . . . . . . . . . . . . . . . . . . . . . .  12
+         2.1.1.5.  Parent  . . . . . . . . . . . . . . . . . . . . .  14
+   3.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     3.1.  Informative References  . . . . . . . . . . . . . . . . .  15
+     3.2.  Normative References  . . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  17
 
 1.  Introduction
 
@@ -122,19 +122,25 @@ Internet-Draft                    KASP                         June 2014
 
    The following modeling types are used:
 
-   container:  A container is used to group related nodes in a subtree.
-      A container has only child nodes and no values.
+   container:  A container node does not have a value, but it has a list
+      of child nodes in the data tree.  The child nodes are defined in
+      the container's substatements.
 
-   list:  A list defines a sequence of list entries.
+   leaf:  A leaf node has a value, but no child nodes in the data tree.
+      A leaf node exists in zero or one instances in the data tree.
 
-   leaf:  A leaf contains simple data like an integer or a string.  It
-      has exactly one value and no child nodes.
+   list:  The "list" statement is used to define an interior data node
+      in the schema tree.  A list node may exist in multiple instances
+      in the data tree.  Each such instance is known as a list entry.
 
-   choice:  A choice contains a set of case nodes that cannot appear
-      together.
+   choice:  The "choice" statement defines a set of alternatives, only
+      one of which may exist at any one time.  A choice node does not
+      exist in the data tree.
 
-   case:  A case is part of the choice type and represents one possible
-      candidate that may appear in the schema.
+      A choice consists of a number of branches, defined with the "case"
+      substatement.  Each branch contains a number of child nodes.  The
+      nodes from at most one of the choice's branches exist at the same
+      time.
 
 1.3.2.  Data Modeling Arguments
 
@@ -154,12 +160,6 @@ Internet-Draft                    KASP                         June 2014
 
    All policies MUST be enclosed in a KASP container.
 
-   container KASP {
-       ...
-   }
-
-   A KASP container MUST contain a sequence of policy entries and MUST
-   NOT contain any other modeling types.
 
 
 
@@ -169,6 +169,13 @@ Lundstroem & Mekking    Expires December 29, 2014               [Page 3]
 
 Internet-Draft                    KASP                         June 2014
 
+
+   container KASP {
+       list Policy { ... }
+   }
+
+   A KASP container MUST contain a sequence of policy entries and MUST
+   NOT contain any other modeling types.
 
 2.1.1.  Policies
 
@@ -183,8 +190,13 @@ Internet-Draft                    KASP                         June 2014
 
    list Policy {
        key "name";
-       leaf name { type string; }
-       leaf description { type string; }
+       leaf name {
+           mandatory true;
+           type string;
+       }
+       leaf description {
+           type string;
+       }
        container Signatures { ... }
        container Denial { ... }
        container Keys { ... }
@@ -207,24 +219,41 @@ Internet-Draft                    KASP                         June 2014
    MAY include other leaf nodes to differentiate between even more types
    of RRsets.
 
-   container Signatures {
-       leaf Resign { type duration; }
-       leaf Refresh { type duration; }
-       leaf Jitter { type duration; }
-       leaf InceptionOffset { type duration; }
-       container Validity {
-           leaf Default { type duration; }
-           leaf Denial { type duration; }
-       }
-   }
-
-
 
 
 Lundstroem & Mekking    Expires December 29, 2014               [Page 4]
 
 Internet-Draft                    KASP                         June 2014
 
+
+   container Signatures {
+       leaf Resign {
+           mandatory true;
+           type duration;
+       }
+       leaf Refresh {
+           mandatory true;
+           type duration;
+       }
+       leaf Jitter {
+           mandatory true;
+           type duration;
+       }
+       leaf InceptionOffset {
+           mandatory true;
+           type duration;
+       }
+       container Validity {
+           leaf Default {
+               mandatory true;
+               type duration;
+           }
+           leaf Denial {
+               mandatory true;
+               type duration;
+           }
+       }
+   }
 
    Here:
 
@@ -244,6 +273,15 @@ Internet-Draft                    KASP                         June 2014
        ensure that not all signatures expire at the same time.  The
        actual value of Jitter to be added MUST be -j + (r % 2j), where j
        is the jitter value from the policy and r a random duration,
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014               [Page 5]
+
+Internet-Draft                    KASP                         June 2014
+
+
        uniformly ranging between -j and j, is added to signature
        validity period to get the signature expiration time.
 
@@ -273,33 +311,66 @@ Internet-Draft                    KASP                         June 2014
    and MUST include a container Hash.  Additionally, it MAY include TTL
    and OptOut leaf nodes.
 
-
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014               [Page 5]
-
-Internet-Draft                    KASP                         June 2014
-
-
    The Hash container MUST include three leaf nodes: Algorithm,
    Iterations and SaltLength [MM: kasp.xml uses Salt, but it is actually
    only needed in signconf.xml].
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014               [Page 6]
+
+Internet-Draft                    KASP                         June 2014
+
+
    container Denial {
        choice RRtype {
            case plain {
-               leaf NSEC { type empty; }
+               leaf NSEC {
+                   mandatory true;
+                   type empty;
+               }
            }
            case hashed {
                container NSEC3 {
-                   leaf TTL { type duration; }?
-                   leaf OptOut { type empty; }?
-                   leaf Resalt { type duration; }
+                   leaf TTL {
+                       type duration;
+                   }
+                   leaf OptOut {
+                       type empty;
+                   }
+                   leaf Resalt {
+                       mandatory true;
+                       type duration;
+                   }
                    container Hash {
-                       leaf Algorithm { type integer; }
-                       leaf Iterations { type integer; }
-                       leaf SaltLength { type integer; }
+                       leaf Algorithm {
+                           mandatory true;
+                           type integer;
+                       }
+                       leaf Iterations {
+                           mandatory true;
+                           type integer;
+                       }
+                       leaf SaltLength {
+                           mandatory true;
+                           type integer;
+                       }
                    }
                }
            }
@@ -313,6 +384,15 @@ Internet-Draft                    KASP                         June 2014
    1.  TTL - if present, the TTL for the NSEC3PARAM resource record MUST
        be set to this value.  If not present, PT0S (0) SHOULD be used as
        TTL.
+
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014               [Page 7]
+
+Internet-Draft                    KASP                         June 2014
+
 
    2.  OptOut - if present, all included NSEC3 records SHOULD set the
        Opt-Out bit.  The signer SHOULD NOT include NSEC3 records for
@@ -331,13 +411,6 @@ Internet-Draft                    KASP                         June 2014
        <NSEC/>
    </Denial>
 
-
-
-Lundstroem & Mekking    Expires December 29, 2014               [Page 6]
-
-Internet-Draft                    KASP                         June 2014
-
-
 2.1.1.3.  Keys
 
    Parameters relating to keys can be found in Keys container.  This
@@ -347,12 +420,55 @@ Internet-Draft                    KASP                         June 2014
    container.  The latter indicates that a Single-Type Signing Scheme is
    used.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014               [Page 8]
+
+Internet-Draft                    KASP                         June 2014
+
+
    container Keys {
-       leaf TTL { type duration; }
-       leaf PublishSafety { type duration; }
-       leaf RetireSafety { type duration; }
-       leaf ShareKeys { type empty; }?
-       leaf Purge { type duration; }?
+       leaf TTL {
+           mandatory true;
+           type duration;
+       }
+       leaf PublishSafety {
+           mandatory true;
+           type duration;
+       }
+       leaf RetireSafety {
+           mandatory true;
+           type duration;
+       }
+       leaf ShareKeys {
+           type empty;
+       }
+       leaf Purge {
+           type duration;
+       }
        choice signing-scheme {
            case split {
                container KSK { ... }
@@ -380,53 +496,129 @@ Internet-Draft                    KASP                         June 2014
        policy, the presence of a ShareKeys node indicates that a
        physical key can be shared between zones.
 
+
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014               [Page 9]
+
+Internet-Draft                    KASP                         June 2014
+
+
    5.  Purge - if present, keys in the dead state (as defined in key-
        timing-bis) will be automatically purged from the database after
        this interval.
 
    A CSK, KSK or ZSK container MUST include leaf nodes for Algorithm,
    Length, Lifetime and Repository.  Additionally, they MAY include a
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014               [Page 7]
-
-Internet-Draft                    KASP                         June 2014
-
-
    RollType leaf, Standby leaf and ManualRollover leaf.  A CSK or KSK
    container MAY also include a RFC5011 leaf.
 
    container CSK {
-       leaf Algorithm { type integer; }
-       leaf Length { type integer; }
-       leaf Lifetime { type duration; }
-       leaf Repository { type string; }
-       leaf RollType { type string; }?
-       leaf Standby { type empty; }?
-       leaf ManualRollover { type empty; }?
-       leaf RFC5011 { type empty; }?
+       leaf Algorithm {
+           mandatory true;
+           type integer;
+       }
+       leaf Length {
+           mandatory true;
+           type integer;
+       }
+       leaf Lifetime {
+           mandatory true;
+           type duration;
+       }
+       leaf Repository {
+           mandatory true;
+           type string;
+       }
+       leaf RollType {
+           type string;
+       }
+       leaf Standby {
+           type empty;
+       }
+       leaf ManualRollover {
+           type empty;
+       }
+       leaf RFC5011 {
+           type empty;
+       }
    }
 
    container KSK {
-       leaf Algorithm { type integer; }
-       leaf Length { type integer; }
-       leaf Lifetime { type duration; }
-       leaf Repository { type string; }
-       leaf RollType { type string; }?
-       leaf Standby { type empty; }?
-       leaf ManualRollover { type empty; }?
-       leaf RFC5011 { type empty; }?
+       leaf Algorithm {
+           mandatory true;
+           type integer;
+       }
+       leaf Length {
+           mandatory true;
+           type integer;
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014              [Page 10]
+
+Internet-Draft                    KASP                         June 2014
+
+
+       }
+       leaf Lifetime {
+           mandatory true;
+           type duration;
+       }
+       leaf Repository {
+           mandatory true;
+           type string;
+       }
+       leaf RollType {
+           type string;
+       }
+       leaf Standby {
+           type empty;
+       }
+       leaf ManualRollover {
+           type empty;
+       }
+       leaf RFC5011 {
+           type empty;
+       }
    }
 
    container ZSK {
-       leaf Algorithm { type integer; }
-       leaf Length { type integer; }
-       leaf Lifetime { type duration; }
-       leaf Repository { type string; }
-       leaf RollType { type string; }?
-       leaf Standby { type integer; }?
-       leaf ManualRollover { type empty; }?
+       leaf Algorithm {
+           mandatory true;
+           type integer;
+       }
+       leaf Length {
+           mandatory true;
+           type integer;
+       }
+       leaf Lifetime {
+           mandatory true;
+           type duration;
+       }
+       leaf Repository {
+           mandatory true;
+           type string;
+       }
+       leaf RollType {
+           type string;
+       }
+       leaf Standby {
+           type empty;
+       }
+       leaf ManualRollover {
+           type empty;
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014              [Page 11]
+
+Internet-Draft                    KASP                         June 2014
+
+
+       }
    }
 
    where:
@@ -440,15 +632,6 @@ Internet-Draft                    KASP                         June 2014
 
    4.  Repository - determines the location of the physical keys.  The
        corresponding type of keys MUST be stored in this repository.
-
-
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014               [Page 8]
-
-Internet-Draft                    KASP                         June 2014
-
 
    5.  Standby - if present, determines the number of standby keys MUST
        be held in the zone.
@@ -467,12 +650,48 @@ Internet-Draft                    KASP                         June 2014
    It SHOULD include a PropagationDelay leaf and a SOA container.  The
    SOA container MUST include a TTL leaf, Minimum leaf and Serial leaf.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014              [Page 12]
+
+Internet-Draft                    KASP                         June 2014
+
+
    container Zone {
-       leaf PropagationDelay { type duration; }
+       leaf PropagationDelay {
+           mandatory true;
+           type duration;
+       }
        container SOA {
-           leaf TTL { type duration; }
-           leaf Minimum { type duration; }
-           leaf Serial { type string; }
+           leaf TTL {
+               mandatory true;
+               type duration;
+           }
+           leaf Minimum {
+               mandatory true;
+               type duration;
+           }
+           leaf Serial {
+               mandatory true;
+               type string;
+           }
        }
    }
 
@@ -497,21 +716,20 @@ Internet-Draft                    KASP                         June 2014
    3.  Serial - The format of the serial number in the signed zone.
        This is one of: "counter", datecounter, unixtime, keep.
 
-
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014               [Page 9]
-
-Internet-Draft                    KASP                         June 2014
-
-
    When Serial is set to "counter", the SOA serial MUST be incremented
    by one every re-sign.
 
    When Serial is set to "datecounter", the SOA serial MUST be set to
    YYYYMMDDCC, where YYYYMMDD represents the current date and CC the
    number of new re-signs that day.  If there are more than 100 re-signs
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014              [Page 13]
+
+Internet-Draft                    KASP                         June 2014
+
+
    a day, the date MUST rollover to the day after and count is reset to
    00.
 
@@ -534,13 +752,25 @@ Internet-Draft                    KASP                         June 2014
    container MUST include TTL and Minimum leafs.
 
    container Parent {
-       leaf PropagationDelay { type duration; }
+       leaf PropagationDelay {
+           mandatory true;
+           type duration;
+       }
        container DS {
-           leaf TTL { type duration; }
+           leaf TTL {
+               mandatory true;
+               type duration;
+           }
        }
        container SOA {
-           leaf TTL { type duration; }
-           leaf Minimum { type duration; }
+           leaf TTL {
+               mandatory true;
+               type duration;
+           }
+           leaf Minimum {
+               mandatory true;
+               type duration;
+           }
        }
    }
 
@@ -548,20 +778,20 @@ Internet-Draft                    KASP                         June 2014
    DS record published in the parent zone after submitting the DNSKEY or
    DS record to the parent zone manager.  The value MAY be used in
    equations related to key timings during a rollover.  If
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014              [Page 14]
+
+Internet-Draft                    KASP                         June 2014
+
+
    PropagationDelay is not used, a signer MUST use different heuristics
    to make sure key timings during a rollover are correct, for example
    by querying the name servers for the required records to exist.
 
    The DS and SOA containers give values of parameters for the DS record
    and SOA record in the parent zone.  These values MAY be used in
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 10]
-
-Internet-Draft                    KASP                         June 2014
-
-
    equations related to key timings during a rollover.  If these values
    are not used, a signer MUST query the parent name servers in order to
    retrieve the correct values.
@@ -603,6 +833,15 @@ Internet-Draft                    KASP                         June 2014
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014              [Page 15]
+
+Internet-Draft                    KASP                         June 2014
+
+
    [RFC6020]  Bjorklund, M., "YANG - A Data Modeling Language for the
               Network Configuration Protocol (NETCONF)", RFC 6020,
               October 2010.
@@ -613,7 +852,48 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014              [Page 11]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lundstroem & Mekking    Expires December 29, 2014              [Page 16]
 
 Internet-Draft                    KASP                         June 2014
 
@@ -669,4 +949,4 @@ Authors' Addresses
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014              [Page 12]
+Lundstroem & Mekking    Expires December 29, 2014              [Page 17]
