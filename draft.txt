@@ -183,7 +183,7 @@ Internet-Draft                    KASP                         June 2014
    policy.  The name is used to link a policy and the zones signed using
    it; each policy MUST have a unique name.  A policy named "default"
    MAY be used to associate with all zones that do not have a policy
-   explicitly configured.  A policy MUST have a description associated
+   explicitly configured.  A policy SHOULD have a description associated
    with it.  Furthermore, a policy MUST have the containers Signatures,
    Denial, Keys, Zone and Parent.  These containers are described in the
    forthcoming sections.
