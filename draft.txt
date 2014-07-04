@@ -484,7 +484,7 @@ Internet-Draft                    KASP                         July 2014
        publish interval in key timing equations.
 
    3.  RetireSafety - Similar, the retire safety margin MUST be added to
-       the reitre interval in key timing equations.
+       the retire interval in key timing equations.
 
    4.  ShareKeys - if multiple zones are associated with the same
        policy, the presence of a ShareKeys node indicates that a
@@ -685,7 +685,7 @@ Internet-Draft                    KASP                         July 2014
    1.  TTL - The TTL of the SOA record MUST be set to the value of the
        TTL leaf.
 
-   2.  Minimum - The MINIMUM rdata field of the SOA record MUST be set
+   2.  Minimum - The MINIMUM RDATA field of the SOA record MUST be set
        to the value of the Minimum leaf.
 
    3.  Serial - The format of the serial number in the signed zone.
@@ -703,7 +703,7 @@ Internet-Draft                    KASP                         July 2014
    When Serial is "unixtime", the SOA serial MUST be set to the seconds
    since the epoch (1970-01-01 UTC).
 
-   When Serial is "keep" the SOA serial MUST be set to the SERIAL rdata
+   When Serial is "keep" the SOA serial MUST be set to the SERIAL RDATA
    field of the SOA record in the unsigned zone.  If this does not
    increment the last used serial, a signer MUST NOT produce a signed
    zone.
@@ -772,7 +772,7 @@ Internet-Draft                    KASP                         July 2014
    1.  TTL - The TTL of the DS and SOA records MUST be set to the value
        of the corresponding TTL leaf.
 
-   2.  Minimum - The MINIMUM rdata field of the SOA record MUST be set
+   2.  Minimum - The MINIMUM RDATA field of the SOA record MUST be set
        to the value of the Minimum leaf.
 
 
