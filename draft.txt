@@ -5,8 +5,8 @@
 DNSOP                                                      J. Lundstroem
 Internet-Draft                                                       .SE
 Intended status: Experimental                                 W. Mekking
-Expires: December 29, 2014                                    NLnet Labs
-                                                           June 27, 2014
+Expires: January 5, 2015                                      NLnet Labs
+                                                            July 4, 2014
 
 
                     DNSSEC Key and Signing Policies
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 29, 2014.
+   This Internet-Draft will expire on January 5, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 1]
+Lundstroem & Mekking     Expires January 5, 2015                [Page 1]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
 Table of Contents
@@ -73,11 +73,11 @@ Table of Contents
          2.1.1.2.  Authenticated Denial of Existence . . . . . . . .   6
          2.1.1.3.  Keys  . . . . . . . . . . . . . . . . . . . . . .   8
          2.1.1.4.  Zone  . . . . . . . . . . . . . . . . . . . . . .  12
-         2.1.1.5.  Parent  . . . . . . . . . . . . . . . . . . . . .  14
+         2.1.1.5.  Parent  . . . . . . . . . . . . . . . . . . . . .  13
    3.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      3.1.  Informative References  . . . . . . . . . . . . . . . . .  15
      3.2.  Normative References  . . . . . . . . . . . . . . . . . .  15
-   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  17
+   Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 2]
+Lundstroem & Mekking     Expires January 5, 2015                [Page 2]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
 1.3.  Data Modeling
@@ -165,9 +165,9 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 3]
+Lundstroem & Mekking     Expires January 5, 2015                [Page 3]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
    container KASP {
@@ -221,9 +221,9 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 4]
+Lundstroem & Mekking     Expires January 5, 2015                [Page 4]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
    container Signatures {
@@ -277,9 +277,9 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 5]
+Lundstroem & Mekking     Expires January 5, 2015                [Page 5]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
        uniformly ranging between -j and j, is added to signature
@@ -312,8 +312,7 @@ Internet-Draft                    KASP                         June 2014
    and OptOut leaf nodes.
 
    The Hash container MUST include three leaf nodes: Algorithm,
-   Iterations and SaltLength [MM: kasp.xml uses Salt, but it is actually
-   only needed in signconf.xml].
+   Iterations and SaltLength.
 
 
 
@@ -333,9 +332,10 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 6]
+
+Lundstroem & Mekking     Expires January 5, 2015                [Page 6]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
    container Denial {
@@ -389,9 +389,9 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 7]
+Lundstroem & Mekking     Expires January 5, 2015                [Page 7]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
    2.  OptOut - if present, all included NSEC3 records SHOULD set the
@@ -416,9 +416,9 @@ Internet-Draft                    KASP                         June 2014
    Parameters relating to keys can be found in Keys container.  This
    container MUST include leaf nodes for TTL, PublishSafety and
    RetireSafety, and MAY include a ShareKeys leaf and a Purge.
-   Furthermore, it MUST either include a KSK and ZSK container, or a CSK
-   container.  The latter indicates that a Single-Type Signing Scheme is
-   used.
+   Furthermore, it MAY include a KSK list, a ZSK list and/or a CSK list.
+   The latter indicates that a Single-Type Signing Scheme is used.  If
+   no such lists are included in the policy, the zone remains unsigned.
 
 
 
@@ -445,9 +445,9 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014               [Page 8]
+Lundstroem & Mekking     Expires January 5, 2015                [Page 8]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
    container Keys {
@@ -469,15 +469,9 @@ Internet-Draft                    KASP                         June 2014
        leaf Purge {
            type duration;
        }
-       choice signing-scheme {
-           case split {
-               container KSK { ... }
-               container ZSK { ... }
-           }
-           case single {
-               container CSK { ... }
-           }
-       }
+       list KSK { ... }
+       list ZSK { ... }
+       list CSK { ... }
    }
 
    The leaf nodes specify the following behavior:
@@ -496,16 +490,6 @@ Internet-Draft                    KASP                         June 2014
        policy, the presence of a ShareKeys node indicates that a
        physical key can be shared between zones.
 
-
-
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014               [Page 9]
-
-Internet-Draft                    KASP                         June 2014
-
-
    5.  Purge - if present, keys in the dead state (as defined in key-
        timing-bis) will be automatically purged from the database after
        this interval.
@@ -514,6 +498,13 @@ Internet-Draft                    KASP                         June 2014
    Length, Lifetime and Repository.  Additionally, they MAY include a
    RollType leaf, Standby leaf and ManualRollover leaf.  A CSK or KSK
    container MAY also include a RFC5011 leaf.
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015                [Page 9]
+
+Internet-Draft                    KASP                         July 2014
+
 
    container CSK {
        leaf Algorithm {
@@ -554,14 +545,6 @@ Internet-Draft                    KASP                         June 2014
        leaf Length {
            mandatory true;
            type integer;
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 10]
-
-Internet-Draft                    KASP                         June 2014
-
-
        }
        leaf Lifetime {
            mandatory true;
@@ -571,6 +554,14 @@ Internet-Draft                    KASP                         June 2014
            mandatory true;
            type string;
        }
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015               [Page 10]
+
+Internet-Draft                    KASP                         July 2014
+
+
        leaf RollType {
            type string;
        }
@@ -610,14 +601,6 @@ Internet-Draft                    KASP                         June 2014
        }
        leaf ManualRollover {
            type empty;
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 11]
-
-Internet-Draft                    KASP                         June 2014
-
-
        }
    }
 
@@ -626,6 +609,14 @@ Internet-Draft                    KASP                         June 2014
    1.  Algorithm - this algorithm MUST be used.
 
    2.  Length - this key length MUST be used.
+
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015               [Page 11]
+
+Internet-Draft                    KASP                         July 2014
+
 
    3.  Lifetime - determines how long the key SHOULD be used for before
        it is rolled.
@@ -649,30 +640,6 @@ Internet-Draft                    KASP                         June 2014
    The Zone container encloses general information concerning the zone.
    It SHOULD include a PropagationDelay leaf and a SOA container.  The
    SOA container MUST include a TTL leaf, Minimum leaf and Serial leaf.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 12]
-
-Internet-Draft                    KASP                         June 2014
-
 
    container Zone {
        leaf PropagationDelay {
@@ -699,6 +666,14 @@ Internet-Draft                    KASP                         June 2014
    information changes at the master server for the zone to work its way
    through to all the secondary servers.  The value MAY be used in
    equations related to key timings during a rollover.  If
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015               [Page 12]
+
+Internet-Draft                    KASP                         July 2014
+
+
    PropagationDelay is not used, a signer MUST use different heuristics
    to make sure key timings during a rollover are correct, for example
    by querying the name servers for the required records to exist.
@@ -722,14 +697,6 @@ Internet-Draft                    KASP                         June 2014
    When Serial is set to "datecounter", the SOA serial MUST be set to
    YYYYMMDDCC, where YYYYMMDD represents the current date and CC the
    number of new re-signs that day.  If there are more than 100 re-signs
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 13]
-
-Internet-Draft                    KASP                         June 2014
-
-
    a day, the date MUST rollover to the day after and count is reset to
    00.
 
@@ -750,6 +717,18 @@ Internet-Draft                    KASP                         June 2014
    SHOULD include a PropagationDelay leaf, a DS container and a SOA
    container.  The DS container MUST include a TTL leaf and the SOA
    container MUST include TTL and Minimum leafs.
+
+
+
+
+
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015               [Page 13]
+
+Internet-Draft                    KASP                         July 2014
+
 
    container Parent {
        leaf PropagationDelay {
@@ -778,14 +757,6 @@ Internet-Draft                    KASP                         June 2014
    DS record published in the parent zone after submitting the DNSKEY or
    DS record to the parent zone manager.  The value MAY be used in
    equations related to key timings during a rollover.  If
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 14]
-
-Internet-Draft                    KASP                         June 2014
-
-
    PropagationDelay is not used, a signer MUST use different heuristics
    to make sure key timings during a rollover are correct, for example
    by querying the name servers for the required records to exist.
@@ -803,6 +774,17 @@ Internet-Draft                    KASP                         June 2014
 
    2.  Minimum - The MINIMUM rdata field of the SOA record MUST be set
        to the value of the Minimum leaf.
+
+
+
+
+
+
+
+Lundstroem & Mekking     Expires January 5, 2015               [Page 14]
+
+Internet-Draft                    KASP                         July 2014
+
 
 3.  References
 
@@ -833,15 +815,6 @@ Internet-Draft                    KASP                         June 2014
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
-
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 15]
-
-Internet-Draft                    KASP                         June 2014
-
-
    [RFC6020]  Bjorklund, M., "YANG - A Data Modeling Language for the
               Network Configuration Protocol (NETCONF)", RFC 6020,
               October 2010.
@@ -864,38 +837,9 @@ Internet-Draft                    KASP                         June 2014
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Lundstroem & Mekking    Expires December 29, 2014              [Page 16]
+Lundstroem & Mekking     Expires January 5, 2015               [Page 15]
 
-Internet-Draft                    KASP                         June 2014
+Internet-Draft                    KASP                         July 2014
 
 
 Appendix A.  Changelog
@@ -949,4 +893,4 @@ Authors' Addresses
 
 
 
-Lundstroem & Mekking    Expires December 29, 2014              [Page 17]
+Lundstroem & Mekking     Expires January 5, 2015               [Page 16]
