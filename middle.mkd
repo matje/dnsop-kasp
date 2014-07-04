@@ -200,8 +200,7 @@ NSEC3. A NSEC3 container MUST include a leaf node Resalt and MUST include
 a container Hash. Additionally, it MAY include TTL and OptOut leaf nodes.
 
 The Hash container MUST include three leaf nodes: Algorithm, Iterations and
-SaltLength [MM: kasp.xml uses Salt, but it is actually only needed in
-signconf.xml].
+SaltLength.
 
     container Denial {
         choice RRtype {
