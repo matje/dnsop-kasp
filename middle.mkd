@@ -143,7 +143,6 @@ include other leaf nodes to differentiate between even more types of RRsets.
             type duration;
         }
         leaf Jitter {
-            mandatory true;
             type duration;
         }
         leaf InceptionOffset {
@@ -213,6 +212,7 @@ SaltLength.
             case hashed {
                 container NSEC3 {
                     leaf TTL {
+                        mandatory true;
                         type duration;
                     }
                     leaf OptOut {
@@ -274,11 +274,9 @@ policy, the zone remains unsigned.
             type duration;
         }
         leaf PublishSafety {
-            mandatory true;
             type duration;
         }
         leaf RetireSafety {
-            mandatory true;
             type duration;
         }
         leaf ShareKeys {
@@ -306,12 +304,12 @@ The leaf nodes specify the following behavior:
 1. Purge - if present, keys in the dead state (as defined in key-timing-bis)
    will be automatically purged from the database after this interval.
 
-A CSK, KSK or ZSK container MUST include leaf nodes for Algorithm,
+A CSK, KSK or ZSK list MUST include leaf nodes for Algorithm,
 Length, Lifetime and Repository. Additionally, they MAY include
-a RollType leaf, Standby leaf and ManualRollover leaf. A CSK or KSK container
+a RollType leaf, Standby leaf and ManualRollover leaf. A CSK or KSK list
 MAY also include a RFC5011 leaf.
 
-    container CSK {
+    list CSK {
         leaf Algorithm {
             mandatory true;
             type integer;
@@ -425,7 +423,6 @@ container MUST include a TTL leaf, Minimum leaf and Serial leaf.
 
     container Zone {
         leaf PropagationDelay {
-            mandatory true;
             type duration;
         }
         container SOA {
@@ -488,22 +485,18 @@ TTL and Minimum leafs.
 
     container Parent {
         leaf PropagationDelay {
-            mandatory true;
             type duration;
         }
         container DS {
             leaf TTL {
-                mandatory true;
                 type duration;
             }
         }
         container SOA {
             leaf TTL {
-                mandatory true;
                 type duration;
             }
             leaf Minimum {
-                mandatory true;
                 type duration;
             }
         }
