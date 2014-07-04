@@ -311,7 +311,7 @@ Internet-Draft                    KASP                         July 2014
    Denial container.  It MUST contain either an empty leaf node NSEC or
    a container NSEC3.  A NSEC3 container MUST include a leaf node for
    TTL and Resalt and MUST include a container Hash.  Additionally, it
-   MAY include TTL and OptOut leaf nodes.
+   MAY include an OptOut leaf node.
 
    The Hash container MUST include three leaf nodes: Algorithm,
    Iterations and SaltLength.
