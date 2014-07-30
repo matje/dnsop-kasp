@@ -410,6 +410,7 @@ where:
    rolled.
 1. Repository - determines the location of the physical keys.
    The corresponding type of keys MUST be stored in this repository.
+1. RollType - determines the way to do key rollovers (defined in key-timing-bis).
 1. Standby - if present, determines the number of standby keys MUST be held in
    the zone.
 1. ManualRollover - if present, this indicates that the key rollover MUST NOT
