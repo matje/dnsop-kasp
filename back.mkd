@@ -1,3 +1,6 @@
 # Changelog
 
 * Initial version
+
+* Changed Jitter to a range between -j and +j, changed the calculation from
+  a MUST to a RECOMMEND.
