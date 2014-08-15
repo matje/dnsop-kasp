@@ -1,6 +1,12 @@
 # Changelog
 
-* Initial version
+#
+
+* Add RollType definition
 
 * Changed Jitter to a range between -j and +j, changed the calculation from
   a MUST to a RECOMMEND.
+
+## -00
+
+* Initial version
