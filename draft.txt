@@ -5,8 +5,8 @@
 DNSOP                                                      J. Lundstroem
 Internet-Draft                                                       .SE
 Intended status: Experimental                                 W. Mekking
-Expires: January 5, 2015                                      NLnet Labs
-                                                            July 4, 2014
+Expires: March 21, 2015                                              Dyn
+                                                      September 17, 2014
 
 
                     DNSSEC Key and Signing Policies
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 5, 2015.
+   This Internet-Draft will expire on March 21, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 1]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 1]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 2]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 2]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
 1.3.  Data Modeling
@@ -165,9 +165,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 3]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 3]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
    container KASP {
@@ -221,9 +221,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 4]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 4]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
    The Validity container MUST include leaf nodes Default and Denial and
@@ -277,9 +277,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 5]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 5]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
        time.  The actual value of jitter MUST be between -j and +j,
@@ -333,9 +333,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 6]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 6]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
    container Denial {
@@ -389,9 +389,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 7]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 7]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
    2.  OptOut - if present, all included NSEC3 records SHOULD set the
@@ -445,9 +445,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 8]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 8]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
    The leaf nodes specify the following behavior:
@@ -501,9 +501,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015                [Page 9]
+Lundstroem & Mekking     Expires March 21, 2015                 [Page 9]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
        }
@@ -557,9 +557,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 10]
+Lundstroem & Mekking     Expires March 21, 2015                [Page 10]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
        }
@@ -613,9 +613,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 11]
+Lundstroem & Mekking     Expires March 21, 2015                [Page 11]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
 2.1.1.4.  Zone
@@ -669,9 +669,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 12]
+Lundstroem & Mekking     Expires March 21, 2015                [Page 12]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
    When Serial is set to "counter", the SOA serial MUST be incremented
@@ -725,9 +725,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 13]
+Lundstroem & Mekking     Expires March 21, 2015                [Page 13]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
    DS record to the parent zone manager.  The value SHOULD be used in
@@ -781,9 +781,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 14]
+Lundstroem & Mekking     Expires March 21, 2015                [Page 14]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
 3.2.  Normative References
@@ -837,9 +837,9 @@ Internet-Draft                    KASP                         July 2014
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 15]
+Lundstroem & Mekking     Expires March 21, 2015                [Page 15]
 
-Internet-Draft                    KASP                         July 2014
+Internet-Draft                    KASP                    September 2014
 
 
 Appendix A.  Changelog
@@ -872,15 +872,13 @@ Authors' Addresses
 
 
    W. (Matthijs) Mekking
-   NLnet Labs
-   Science Park 400
-   Amsterdam  1098 XH
-   NL
+   Dyn
+   150 Dow St
+   Manchester, NH  03101
+   US
 
-   EMail: matthijs@nlnetlabs.nl
-   URI:   http://www.nlnetlabs.nl/
-
-
+   EMail: mmekking@dyn.com
+   URI:   https://www.dyn.com
 
 
 
@@ -893,4 +891,6 @@ Authors' Addresses
 
 
 
-Lundstroem & Mekking     Expires January 5, 2015               [Page 16]
+
+
+Lundstroem & Mekking     Expires March 21, 2015                [Page 16]
