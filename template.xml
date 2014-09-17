@@ -51,24 +51,24 @@
         </author>
 
         <author initials='W.' surname='Mekking' fullname='W. (Matthijs) Mekking'>
-            <organization>NLnet Labs</organization>
+            <organization>Dyn</organization>
 
             <address>
                 <postal>
-                    <street>Science Park 400</street>
+                    <street>150 Dow St</street>
                     <street></street>
-                    <city>Amsterdam</city> <region></region>
-                    <code>1098 XH</code>
-                    <country>NL</country>
+                    <city>Manchester</city> <region>NH</region>
+                    <code>03101</code>
+                    <country>US</country>
                 </postal>
 
                 <phone></phone>
-                <email>matthijs@nlnetlabs.nl</email>
-                <uri>http://www.nlnetlabs.nl/</uri>
+                <email>mmekking@dyn.com</email>
+                <uri>https://www.dyn.com</uri>
             </address>
         </author>
 
-        <date day='4' month='July' year='2014' />
+        <date day='17' month='September' year='2014' />
 
         <area>Internet</area>
         <workgroup>DNSOP</workgroup>
