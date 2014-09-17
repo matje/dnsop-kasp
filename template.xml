@@ -27,7 +27,7 @@
 <?rfc autobreaks="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" category="exp" docName="draft-mekking-dnsop-kasp-00">
+<rfc ipr="trust200902" category="exp" docName="draft-mekking-dnsop-kasp-01">
 <front>
 
 <title abbrev="KASP">DNSSEC Key and Signing Policies</title>

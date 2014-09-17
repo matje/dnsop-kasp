@@ -10,7 +10,7 @@ Expires: January 5, 2015                                      NLnet Labs
 
 
                     DNSSEC Key and Signing Policies
-                      draft-mekking-dnsop-kasp-00
+                      draft-mekking-dnsop-kasp-01
 
 Abstract
 
@@ -185,8 +185,8 @@ Internet-Draft                    KASP                         July 2014
    MAY be used to associate with all zones that do not have a policy
    explicitly configured.  A policy SHOULD have a description associated
    with it.  Furthermore, a policy MUST have the containers Signatures,
-   Denial, Keys, Zone and Parent.  These containers are described in the
-   forthcoming sections.
+   Denial, Keys and Zone.  Finally, it MAY include a Parent container.
+   These containers are described in the forthcoming sections.
 
    list Policy {
        key "name";
@@ -851,6 +851,9 @@ Appendix B.
    o  Changed Jitter to a range between -j and +j, changed the
       calculation from a MUST to a RECOMMEND.
 
+   o  Parent container is optional, because all child nodes are
+      optional.
+
 B.1.  -00
 
    o  Initial version
@@ -876,9 +879,6 @@ Authors' Addresses
 
    EMail: matthijs@nlnetlabs.nl
    URI:   http://www.nlnetlabs.nl/
-
-
-
 
 
 
