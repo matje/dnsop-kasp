@@ -7,6 +7,8 @@
 * Changed Jitter to a range between -j and +j, changed the calculation from
   a MUST to a RECOMMEND.
 
+* Parent container is optional, because all child nodes are optional.
+
 ## -00
 
 * Initial version
