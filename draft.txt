@@ -78,6 +78,8 @@ Table of Contents
      3.1.  Informative References  . . . . . . . . . . . . . . . . .  14
      3.2.  Normative References  . . . . . . . . . . . . . . . . . .  15
    Appendix A.  Changelog  . . . . . . . . . . . . . . . . . . . . .  16
+   Appendix B. . . . . . . . . . . . . . . . . . . . . . . . . . . .  16
+     B.1.  -00 . . . . . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -102,8 +104,6 @@ Table of Contents
 
    A key and signing policy can be expressed in any format.  This
    document uses XML as example.
-
-
 
 
 
@@ -595,7 +595,7 @@ Internet-Draft                    KASP                         July 2014
        corresponding type of keys MUST be stored in this repository.
 
    5.  RollType - determines the way to do key rollovers (defined in
-       key-timing-bis).
+       [I-D.mekking-dnsop-dnssec-key-timing-bis]).
 
    6.  Standby - if present, determines the number of standby keys MUST
        be held in the zone.
@@ -754,6 +754,11 @@ Internet-Draft                    KASP                         July 2014
 
 3.1.  Informative References
 
+   [I-D.mekking-dnsop-dnssec-key-timing-bis]
+              Mekking, M., "DNSSEC Key Timing Considerations Follow-Up",
+              draft-mekking-dnsop-dnssec-key-timing-bis-02 (work in
+              progress), July 2011.
+
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, March 2005.
@@ -773,11 +778,6 @@ Internet-Draft                    KASP                         July 2014
    [RFC6781]  Kolkman, O., Mekking, W., and R. Gieben, "DNSSEC
               Operational Practices, Version 2", RFC 6781, December
               2012.
-
-
-
-
-
 
 
 
@@ -844,10 +844,16 @@ Internet-Draft                    KASP                         July 2014
 
 Appendix A.  Changelog
 
-   o  Initial version
+Appendix B.
+
+   o  Add RollType definition
 
    o  Changed Jitter to a range between -j and +j, changed the
       calculation from a MUST to a RECOMMEND.
+
+B.1.  -00
+
+   o  Initial version
 
 Authors' Addresses
 
@@ -870,12 +876,6 @@ Authors' Addresses
 
    EMail: matthijs@nlnetlabs.nl
    URI:   http://www.nlnetlabs.nl/
-
-
-
-
-
-
 
 
 
